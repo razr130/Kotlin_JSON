@@ -101,7 +101,7 @@ class EditPokemonActivity : AppCompatActivity() {
     private fun editpokemon(id: String, name: String, type: ArrayList<String>)
     {
         val queue = Volley.newRequestQueue(this)
-        val url = "http://192.168.2.49:3000/pokemon/" + id
+        val url = "http://192.168.2.208:3000/pokemon/" + id
 
         var ob = JSONObject()
         var ar = JSONArray()

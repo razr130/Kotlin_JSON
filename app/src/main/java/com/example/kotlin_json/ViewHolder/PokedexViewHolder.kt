@@ -15,10 +15,7 @@ import android.view.LayoutInflater
 import android.view.MenuInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.PopupMenu
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonArrayRequest
@@ -35,43 +32,42 @@ import org.json.JSONObject
 import java.io.IOException
 import java.security.AccessController.getContext
 
-class PokedexViewHolder (private val pokedexlist:ArrayList<Pokedex>): RecyclerView.Adapter<PokedexViewHolder.PokedexHolder>() {
-
+class PokedexViewHolder(private val pokedexlist: ArrayList<Pokedex>) :
+    RecyclerView.Adapter<PokedexViewHolder.PokedexHolder>() {
 
 
     class PokedexHolder(itemView: View, var pokedex: Pokedex? = null) : RecyclerView.ViewHolder(itemView) {
         var txtpokemonname = itemView.findViewById(R.id.TxtPokemonName) as TextView
         var txtpokedexno = itemView.findViewById(R.id.TxtPokedexNo) as TextView
-        var txttype = itemView.findViewById(R.id.TxtType) as TextView
+        //        var txttype = itemView.findViewById(R.id.TxtType) as TextView
+        var type1 = itemView.findViewById(R.id.IconType1) as Button
+        var type2 = itemView.findViewById(R.id.IconType2) as Button
         var pokemonimg = itemView.findViewById(R.id.PictPokemon) as ImageView
 
         init {
-//            itemView.setOnClickListener {
-//
-//
-//            }
+
             itemView.pokedex_menu.setOnClickListener {
                 val popupmenu = PopupMenu(itemView.context, it)
-                popupmenu.setOnMenuItemClickListener {
-                    item ->
-                    when (item.itemId){
+                popupmenu.setOnMenuItemClickListener { item ->
+                    when (item.itemId) {
                         R.id.menu_edit -> {
                             val intent = Intent(itemView.context, EditPokemonActivity::class.java)
-                            intent.putExtra("name",pokedex?.name)
+                            intent.putExtra("name", pokedex?.name)
                             intent.putExtra("id", pokedex?.id)
-                            intent.putExtra("type",pokedex?.type)
+                            intent.putExtra("type", pokedex?.type)
                             itemView.context.startActivity(intent)
                             true
                         }
                         R.id.menu_delete -> {
                             val queue = Volley.newRequestQueue(itemView.context)
-                            val url = "http://192.168.2.49:3000/pokemon/" + pokedex?.id
+                            val url = "http://192.168.2.208:3000/pokemon/" + pokedex?.id
                             val arrayRequest = StringRequest(
                                 Request.Method.DELETE, url, Response.Listener<String>
                                 {
-                                        _ ->
 
                                     Toast.makeText(itemView.context, "Pokemon data deleted", Toast.LENGTH_LONG).show()
+
+
                                 },
                                 Response.ErrorListener
                                 { error ->
@@ -91,6 +87,11 @@ class PokedexViewHolder (private val pokedexlist:ArrayList<Pokedex>): RecyclerVi
 
     }
 
+    fun refresh(data: ArrayList<Pokedex>) {
+        data.clear()
+        data.addAll(data)
+        notifyDataSetChanged()
+    }
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): PokedexHolder {
         val v = LayoutInflater.from(p0.context).inflate(R.layout.pokedex_layout, p0, false)
@@ -103,24 +104,140 @@ class PokedexViewHolder (private val pokedexlist:ArrayList<Pokedex>): RecyclerVi
 
     override fun onBindViewHolder(holder: PokedexHolder, i: Int) {
         val pokedex: Pokedex = pokedexlist[i]
-
+        val type: Array<String> = pokedex.type.split(" ").toTypedArray()
         holder.txtpokedexno.text = pokedex.id
         holder.txtpokemonname.text = pokedex.name
-        holder.txttype.text = pokedex.type
-
-        if(pokedex.image=="empty")
+        if(type[1].isEmpty()||type[1] == "")
         {
-            val context: Context = holder.pokemonimg.getContext()
-            var id = context.resources.getIdentifier("pokeball", "drawable", context.packageName)
-            holder.pokemonimg.setImageResource(id)
+            holder.type2.visibility = View.GONE
         }
         else
         {
+            holder.type2.text = type[1]
+            if(holder.type2.text == "Normal"){
+                holder.type2.setBackgroundResource(R.drawable.icon_normal)
+            }
+            else if(holder.type2.text == "Bug"){
+                holder.type2.setBackgroundResource(R.drawable.icon_bug)
+            }
+            else if(holder.type2.text == "Dark"){
+                holder.type2.setBackgroundResource(R.drawable.icon_dark)
+            }
+            else if(holder.type2.text == "Dragon"){
+                holder.type2.setBackgroundResource(R.drawable.icon_dragon)
+            }
+            else if(holder.type2.text == "Electric"){
+                holder.type2.setBackgroundResource(R.drawable.icon_electric)
+            }
+            else if(holder.type2.text == "Fairy"){
+                holder.type2.setBackgroundResource(R.drawable.icon_fairy)
+            }
+            else if(holder.type2.text == "Fighting"){
+                holder.type2.setBackgroundResource(R.drawable.icon_fighting)
+            }
+            else if(holder.type2.text == "Fire"){
+                holder.type2.setBackgroundResource(R.drawable.icon_fire)
+            }
+            else if(holder.type2.text == "Flying"){
+                holder.type2.setBackgroundResource(R.drawable.icon_flying)
+            }
+            else if(holder.type2.text == "Ghost"){
+                holder.type2.setBackgroundResource(R.drawable.icon_ghost)
+            }
+            else if(holder.type2.text == "Grass"){
+                holder.type2.setBackgroundResource(R.drawable.icon_grass)
+            }
+            else if(holder.type2.text == "Ground"){
+                holder.type2.setBackgroundResource(R.drawable.icon_ground)
+            }
+            else if(holder.type2.text == "Ice"){
+                holder.type2.setBackgroundResource(R.drawable.icon_ice)
+            }
+            else if(holder.type2.text == "Poison"){
+                holder.type2.setBackgroundResource(R.drawable.icon_poison)
+            }
+            else if(holder.type2.text == "Psychic"){
+                holder.type2.setBackgroundResource(R.drawable.icon_psychic)
+            }
+            else if(holder.type2.text == "Rock"){
+                holder.type2.setBackgroundResource(R.drawable.icon_rock)
+            }
+            else if(holder.type2.text == "Steel"){
+                holder.type2.setBackgroundResource(R.drawable.icon_steel)
+            }
+            else if(holder.type2.text == "Water"){
+                holder.type2.setBackgroundResource(R.drawable.icon_water)
+            }
+
+        }
+
+        holder.type1.text = type[0]
+        if(holder.type1.text == "Normal"){
+            holder.type1.setBackgroundResource(R.drawable.icon_normal)
+        }
+        else if(holder.type1.text == "Bug"){
+            holder.type1.setBackgroundResource(R.drawable.icon_bug)
+        }
+        else if(holder.type1.text == "Dark"){
+            holder.type1.setBackgroundResource(R.drawable.icon_dark)
+        }
+        else if(holder.type1.text == "Dragon"){
+            holder.type1.setBackgroundResource(R.drawable.icon_dragon)
+        }
+        else if(holder.type1.text == "Electric"){
+            holder.type1.setBackgroundResource(R.drawable.icon_electric)
+        }
+        else if(holder.type1.text == "Fairy"){
+            holder.type1.setBackgroundResource(R.drawable.icon_fairy)
+        }
+        else if(holder.type1.text == "Fighting"){
+            holder.type1.setBackgroundResource(R.drawable.icon_fighting)
+        }
+        else if(holder.type1.text == "Fire"){
+            holder.type1.setBackgroundResource(R.drawable.icon_fire)
+        }
+        else if(holder.type1.text == "Flying"){
+            holder.type1.setBackgroundResource(R.drawable.icon_flying)
+        }
+        else if(holder.type1.text == "Ghost"){
+            holder.type1.setBackgroundResource(R.drawable.icon_ghost)
+        }
+        else if(holder.type1.text == "Grass"){
+            holder.type1.setBackgroundResource(R.drawable.icon_grass)
+        }
+        else if(holder.type1.text == "Ground"){
+            holder.type1.setBackgroundResource(R.drawable.icon_ground)
+        }
+        else if(holder.type1.text == "Ice"){
+            holder.type1.setBackgroundResource(R.drawable.icon_ice)
+        }
+        else if(holder.type1.text == "Poison"){
+            holder.type1.setBackgroundResource(R.drawable.icon_poison)
+        }
+        else if(holder.type1.text == "Psychic"){
+            holder.type1.setBackgroundResource(R.drawable.icon_psychic)
+        }
+        else if(holder.type1.text == "Rock"){
+            holder.type1.setBackgroundResource(R.drawable.icon_rock)
+        }
+        else if(holder.type1.text == "Steel"){
+            holder.type1.setBackgroundResource(R.drawable.icon_steel)
+        }
+        else if(holder.type1.text == "Water"){
+            holder.type1.setBackgroundResource(R.drawable.icon_water)
+        }
+
+        if (pokedex.image == "empty") {
+            val context: Context = holder.pokemonimg.getContext()
+            var id = context.resources.getIdentifier("pokeball", "drawable", context.packageName)
+            holder.pokemonimg.setImageResource(id)
+        } else {
             val context: Context = holder.pokemonimg.getContext()
             Picasso.with(context).load(pokedex.image).fit().centerInside().into(holder.pokemonimg)
         }
 
         holder.pokedex = pokedex
+        holder.setIsRecyclable(false)
 
     }
 
