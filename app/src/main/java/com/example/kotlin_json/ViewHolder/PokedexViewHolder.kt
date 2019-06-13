@@ -21,6 +21,7 @@ import com.android.volley.Response
 import com.android.volley.toolbox.JsonArrayRequest
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
+import com.example.kotlin_json.DetailPokemonActivity
 import com.example.kotlin_json.EditPokemonActivity
 import com.example.kotlin_json.MainActivity
 import com.example.kotlin_json.Model.Pokedex
@@ -39,13 +40,11 @@ class PokedexViewHolder(private val pokedexlist: ArrayList<Pokedex>) :
     class PokedexHolder(itemView: View, var pokedex: Pokedex? = null) : RecyclerView.ViewHolder(itemView) {
         var txtpokemonname = itemView.findViewById(R.id.TxtPokemonName) as TextView
         var txtpokedexno = itemView.findViewById(R.id.TxtPokedexNo) as TextView
-        //        var txttype = itemView.findViewById(R.id.TxtType) as TextView
         var type1 = itemView.findViewById(R.id.IconType1) as Button
         var type2 = itemView.findViewById(R.id.IconType2) as Button
         var pokemonimg = itemView.findViewById(R.id.PictPokemon) as ImageView
 
         init {
-
             itemView.pokedex_menu.setOnClickListener {
                 val popupmenu = PopupMenu(itemView.context, it)
                 popupmenu.setOnMenuItemClickListener { item ->
@@ -64,17 +63,13 @@ class PokedexViewHolder(private val pokedexlist: ArrayList<Pokedex>) :
                             val arrayRequest = StringRequest(
                                 Request.Method.DELETE, url, Response.Listener<String>
                                 {
-
                                     Toast.makeText(itemView.context, "Pokemon data deleted", Toast.LENGTH_LONG).show()
-
-
                                 },
                                 Response.ErrorListener
                                 { error ->
                                     Toast.makeText(itemView.context, error.toString(), Toast.LENGTH_LONG).show()
                                 })
                             queue.add(arrayRequest)
-
                             true
                         }
                         else -> false
@@ -82,6 +77,11 @@ class PokedexViewHolder(private val pokedexlist: ArrayList<Pokedex>) :
                 }
                 popupmenu.inflate(R.menu.menu_pokedex)
                 popupmenu.show()
+            }
+            itemView.setOnClickListener {
+                val intent = Intent(itemView.context, DetailPokemonActivity::class.java)
+                intent.putExtra("id", pokedex?.id)
+                itemView.context.startActivity(intent)
             }
         }
 

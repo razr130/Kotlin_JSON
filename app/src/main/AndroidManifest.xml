@@ -11,14 +11,18 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
+        <activity android:name=".DetailPokemonActivity">
+        </activity>
         <activity android:name=".EditPokemonActivity">
-            <meta-data android:name="android.support.PARENT_ACTIVITY"
-            android:value=".MainActivity"/>
+            <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value=".MainActivity"/>
         </activity>
         <activity android:name=".AddPokemonActivity">
         </activity>
-        <activity android:name=".MainActivity"
-        android:launchMode="singleTop">
+        <activity
+                android:name=".MainActivity"
+                android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
