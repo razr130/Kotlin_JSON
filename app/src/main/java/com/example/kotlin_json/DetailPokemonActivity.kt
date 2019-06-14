@@ -1,7 +1,9 @@
 package com.example.kotlin_json
 
+import android.graphics.Color
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v4.content.ContextCompat
 import android.view.View
 import android.widget.Toast
 import com.android.volley.Request
@@ -10,13 +12,27 @@ import com.android.volley.toolbox.JsonArrayRequest
 import com.android.volley.toolbox.Volley
 import com.example.kotlin_json.Model.Pokedex
 import com.example.kotlin_json.ViewHolder.PokedexViewHolder
+import com.github.mikephil.charting.charts.HorizontalBarChart
+import com.github.mikephil.charting.components.Description
+import com.github.mikephil.charting.components.XAxis
+import com.github.mikephil.charting.data.BarData
+import com.github.mikephil.charting.data.BarDataSet
+import com.github.mikephil.charting.data.BarEntry
+import com.github.mikephil.charting.formatter.IValueFormatter
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
+import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_detail_pokemon.*
 import org.json.JSONArray
 import org.json.JSONObject
+import com.github.mikephil.charting.components.AxisBase
+import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.formatter.IAxisValueFormatter
+import com.github.mikephil.charting.utils.ViewPortHandler
+
 
 class DetailPokemonActivity : AppCompatActivity() {
-
+    lateinit var TheChart : HorizontalBarChart
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail_pokemon)
@@ -25,11 +41,13 @@ class DetailPokemonActivity : AppCompatActivity() {
 
         parseJSON(rec_id)
 
+
     }
+
 
     private fun parseJSON(id: String) {
         val queue = Volley.newRequestQueue(this)
-        val url = "http://192.168.2.208:3000/pokemon?id=" + id
+        val url = "http://192.168.1.81:3000/pokemon?id=" + id
 
         val arrayRequest = JsonArrayRequest(
             Request.Method.GET, url, null, Response.Listener<JSONArray>
@@ -148,6 +166,14 @@ class DetailPokemonActivity : AppCompatActivity() {
                         }
                     }
 
+                    val statarray = ob.getJSONObject("stats")
+                    var hp = statarray.getInt("hp")
+                    var attack = statarray.getInt("attack")
+                    var defense = statarray.getInt("defense")
+                    var spattack = statarray.getInt("spattack")
+                    var spdefense = statarray.getInt("spdefense")
+                    var speed = statarray.getInt("speed")
+
                     TxtNameDetail.text = name
                     TxtDexNoDetailData.text = dexno
                     TxtSpeciesDetailData.text = species
@@ -155,6 +181,9 @@ class DetailPokemonActivity : AppCompatActivity() {
                     TxtWeightDetailData.text = weight
                     TxtAbilitiesDetailData.text = abilities
                     Picasso.with(this).load(pokeimg).into(ImagePokemonDetail)
+//                    setupstatchart(hp,attack,defense,spattack,spdefense,speed)
+                    setStatGraph(hp,attack,defense,spattack,spdefense,speed)
+
                 }
             },
             Response.ErrorListener
@@ -163,4 +192,85 @@ class DetailPokemonActivity : AppCompatActivity() {
             })
         queue.add(arrayRequest)
     }
+
+    private fun setStatGraph(hp: Int, attack: Int, defense: Int, spattack: Int, spdefense: Int, speed: Int) {
+
+        TheChart = StatChart              //skill_rating_chart is the id of the XML layout
+
+        TheChart.setDrawBarShadow(false)
+        val description = Description()
+        description.text = ""
+        TheChart.description = description
+        TheChart.legend.setEnabled(false)
+        TheChart.setPinchZoom(false)
+        TheChart.setDrawValueAboveBar(false)
+        TheChart.setScaleEnabled(false)
+
+        //Display the axis on the left (contains the labels 1*, 2* and so on)
+        val xAxis = TheChart.getXAxis()
+        xAxis.setDrawGridLines(false)
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM)
+        xAxis.setEnabled(true)
+        xAxis.setDrawAxisLine(false)
+
+
+        val yLeft = TheChart.axisLeft
+
+//Set the minimum and maximum bar lengths as per the values that they represent
+        yLeft.axisMaximum = 250f
+        yLeft.axisMinimum = 0f
+        yLeft.isEnabled = false
+
+        //Set label count to 5 as we are displaying 5 star rating
+        xAxis.setLabelCount(6)
+
+//Now add the labels to be added on the vertical axis
+        val values = arrayOf("Speed", "Sp.Defense", "Sp.Atack", "Defense", "Attack","HP")
+        xAxis.valueFormatter = XAxisValueFormatter(values)
+
+        val yRight = TheChart.axisRight
+        yRight.setDrawAxisLine(true)
+        yRight.setDrawGridLines(false)
+        yRight.isEnabled = false
+
+        //Set bar entries and add necessary formatting
+        setGraphData(hp,attack,defense,spattack,spdefense,speed)
+
+        //Add animation to the graph
+        TheChart.animateY(2000)
+    }
+
+    inner class XAxisValueFormatter(private val values: Array<String>) : IAxisValueFormatter {
+
+        override fun getFormattedValue(value: Float, axis: AxisBase): String {
+            return this.values[value.toInt()]
+        }
+    }
+
+    private fun setGraphData(hp: Int, attack: Int, defense: Int, spattack: Int, spdefense: Int, speed: Int) {
+
+        //Add a list of bar entries
+        val entries = ArrayList<BarEntry>()
+        entries.add(BarEntry(5f, (hp).toFloat()))
+        entries.add(BarEntry(4f, (attack).toFloat()))
+        entries.add(BarEntry(3f, (defense).toFloat()))
+        entries.add(BarEntry(2f, (spattack).toFloat()))
+        entries.add(BarEntry(1f, (spdefense).toFloat()))
+        entries.add(BarEntry(0f, (speed).toFloat()))
+        val barDataSet = BarDataSet(entries, "Bar Data Set")
+        barDataSet.setColors(
+            ContextCompat.getColor(TheChart.context, R.color.grass))
+
+        TheChart.setDrawBarShadow(true)
+        barDataSet.barShadowColor = Color.argb(40, 150, 150, 150)
+        val data = BarData(barDataSet)
+
+        //Set the bar width
+        //Note : To increase the spacing between the bars set the value of barWidth to < 1f
+        data.barWidth = 0.7f
+        //Finally set the data and refresh the graph
+        TheChart.data = data
+        TheChart.invalidate()
+    }
+
 }

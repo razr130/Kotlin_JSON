@@ -184,6 +184,12 @@
                     />
                 </TableRow>
             </TableLayout>
+            <com.github.mikephil.charting.charts.HorizontalBarChart
+                    android:layout_width="match_parent"
+                    android:layout_height="400dp"
+                    android:id="@+id/StatChart"
+                    android:layout_below="@+id/TblDetail">
+            </com.github.mikephil.charting.charts.HorizontalBarChart>
         </RelativeLayout>
     </ScrollView>
 </FrameLayout>
