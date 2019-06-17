@@ -47,7 +47,7 @@ class DetailPokemonActivity : AppCompatActivity() {
 
     private fun parseJSON(id: String) {
         val queue = Volley.newRequestQueue(this)
-        val url = "http://192.168.1.81:3000/pokemon?id=" + id
+        val url = "http://192.168.2.94:3000/pokemon?id=" + id
 
         val arrayRequest = JsonArrayRequest(
             Request.Method.GET, url, null, Response.Listener<JSONArray>
@@ -195,7 +195,7 @@ class DetailPokemonActivity : AppCompatActivity() {
 
     private fun setStatGraph(hp: Int, attack: Int, defense: Int, spattack: Int, spdefense: Int, speed: Int) {
 
-        TheChart = StatChart              //skill_rating_chart is the id of the XML layout
+        TheChart = StatChart
 
         TheChart.setDrawBarShadow(false)
         val description = Description()
@@ -206,7 +206,6 @@ class DetailPokemonActivity : AppCompatActivity() {
         TheChart.setDrawValueAboveBar(false)
         TheChart.setScaleEnabled(false)
 
-        //Display the axis on the left (contains the labels 1*, 2* and so on)
         val xAxis = TheChart.getXAxis()
         xAxis.setDrawGridLines(false)
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM)
@@ -216,15 +215,12 @@ class DetailPokemonActivity : AppCompatActivity() {
 
         val yLeft = TheChart.axisLeft
 
-//Set the minimum and maximum bar lengths as per the values that they represent
         yLeft.axisMaximum = 250f
         yLeft.axisMinimum = 0f
         yLeft.isEnabled = false
 
-        //Set label count to 5 as we are displaying 5 star rating
         xAxis.setLabelCount(6)
 
-//Now add the labels to be added on the vertical axis
         val values = arrayOf("Speed", "Sp.Defense", "Sp.Atack", "Defense", "Attack","HP")
         xAxis.valueFormatter = XAxisValueFormatter(values)
 
@@ -233,10 +229,8 @@ class DetailPokemonActivity : AppCompatActivity() {
         yRight.setDrawGridLines(false)
         yRight.isEnabled = false
 
-        //Set bar entries and add necessary formatting
         setGraphData(hp,attack,defense,spattack,spdefense,speed)
 
-        //Add animation to the graph
         TheChart.animateY(2000)
     }
 
@@ -250,25 +244,96 @@ class DetailPokemonActivity : AppCompatActivity() {
     private fun setGraphData(hp: Int, attack: Int, defense: Int, spattack: Int, spdefense: Int, speed: Int) {
 
         //Add a list of bar entries
+        val colors = java.util.ArrayList<Int>()
         val entries = ArrayList<BarEntry>()
         entries.add(BarEntry(5f, (hp).toFloat()))
+        if(hp<=50){
+            colors.add(Color.rgb(255,68,34))
+        }
+        else if(hp in 51..80){
+            colors.add(Color.rgb(255,204,51))
+        }
+        else if(hp in 81..200){
+            colors.add(Color.rgb(119,204,85))
+        }
+        else{
+            colors.add(Color.rgb(102,204,255))
+        }
         entries.add(BarEntry(4f, (attack).toFloat()))
+        if(attack<=50){
+            colors.add(Color.rgb(255,68,34))
+        }
+        else if(attack in 51..80){
+            colors.add(Color.rgb(255,204,51))
+        }
+        else if(attack in 81..200){
+            colors.add(Color.rgb(119,204,85))
+        }
+        else{
+            colors.add(Color.rgb(102,204,255))
+        }
         entries.add(BarEntry(3f, (defense).toFloat()))
+        if(defense<=50){
+            colors.add(Color.rgb(255,68,34))
+        }
+        else if(defense in 51..80){
+            colors.add(Color.rgb(255,204,51))
+        }
+        else if(defense in 81..200){
+            colors.add(Color.rgb(119,204,85))
+        }
+        else{
+            colors.add(Color.rgb(102,204,255))
+        }
         entries.add(BarEntry(2f, (spattack).toFloat()))
+        if(spattack<=50){
+            colors.add(Color.rgb(255,68,34))
+        }
+        else if(spattack in 51..80){
+            colors.add(Color.rgb(255,204,51))
+        }
+        else if(spattack in 81..200){
+            colors.add(Color.rgb(119,204,85))
+        }
+        else{
+            colors.add(Color.rgb(102,204,255))
+        }
         entries.add(BarEntry(1f, (spdefense).toFloat()))
+        if(spdefense<=50){
+            colors.add(Color.rgb(255,68,34))
+        }
+        else if(spdefense in 51..80){
+            colors.add(Color.rgb(255,204,51))
+        }
+        else if(spdefense in 81..200){
+            colors.add(Color.rgb(119,204,85))
+        }
+        else{
+            colors.add(Color.rgb(102,204,255))
+        }
         entries.add(BarEntry(0f, (speed).toFloat()))
+        if(speed<=50){
+            colors.add(Color.rgb(255,68,34))
+        }
+        else if(speed in 51..80){
+            colors.add(Color.rgb(255,204,51))
+        }
+        else if(speed in 81..200){
+            colors.add(Color.rgb(119,204,85))
+        }
+        else{
+            colors.add(Color.rgb(102,204,255))
+        }
         val barDataSet = BarDataSet(entries, "Bar Data Set")
-        barDataSet.setColors(
-            ContextCompat.getColor(TheChart.context, R.color.grass))
+
+        barDataSet.colors = colors
 
         TheChart.setDrawBarShadow(true)
         barDataSet.barShadowColor = Color.argb(40, 150, 150, 150)
         val data = BarData(barDataSet)
 
-        //Set the bar width
-        //Note : To increase the spacing between the bars set the value of barWidth to < 1f
         data.barWidth = 0.7f
-        //Finally set the data and refresh the graph
+
         TheChart.data = data
         TheChart.invalidate()
     }

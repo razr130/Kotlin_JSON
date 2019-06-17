@@ -59,7 +59,7 @@ class PokedexViewHolder(private val pokedexlist: ArrayList<Pokedex>) :
                         }
                         R.id.menu_delete -> {
                             val queue = Volley.newRequestQueue(itemView.context)
-                            val url = "http://192.168.1.81:3000/pokemon/" + pokedex?.id
+                            val url = "http://192.168.2.94:3000/pokemon/" + pokedex?.id
                             val arrayRequest = StringRequest(
                                 Request.Method.DELETE, url, Response.Listener<String>
                                 {

@@ -103,7 +103,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun parseJSON() {
         val queue = Volley.newRequestQueue(this)
-        val url = "http://192.168.1.81:3000/pokemon"
+        val url = "http://192.168.2.94:3000/pokemon"
 
         val arrayRequest = JsonArrayRequest(Request.Method.GET, url, null, Response.Listener<JSONArray>
         { response ->
@@ -131,7 +131,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun SearchJSON(keywords: String) {
         val queue = Volley.newRequestQueue(this)
-        val url = "http://192.168.1.81:3000/pokemon"
+        val url = "http://192.168.2.94:3000/pokemon"
 
         val arrayRequest = JsonArrayRequest(Request.Method.GET, url, null, Response.Listener<JSONArray>
         { response ->
