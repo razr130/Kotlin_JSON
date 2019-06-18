@@ -46,12 +46,17 @@ class AddPokemonActivity : AppCompatActivity() {
         })
 
         BtnAdd.setOnClickListener {
-            addpokemon(TxtPokedexNoAdd.text.toString(), TxtPokemonNameAdd.text.toString(), type)
+            addpokemon(TxtPokedexNoAdd.text.toString(), TxtPokemonNameAdd.text.toString(), type, TxtPokemonSpeciesAdd.text.toString(),
+                (TxtPokemonHeightAdd.text.toString()).toDouble(), (TxtPokemonWeightAdd.text.toString()).toDouble(),TxtPokemonAbilitiesAdd.text.toString(),
+                (TxtPokemonHPAdd.text.toString()).toInt(),(TxtPokemonAttackAdd.text.toString()).toInt(),(TxtPokemonDefenseAdd.text.toString()).toInt(),
+                (TxtPokemonSpAttackAdd.text.toString()).toInt(),(TxtPokemonSpDefenseAdd.text.toString()).toInt(),(TxtPokemonSpeedAdd.text.toString()).toInt())
+
         }
 
     }
 
-    private fun addpokemon(id: String?, name: String?, type: ArrayList<String>) {
+    private fun addpokemon(id: String?, name: String?, type: ArrayList<String>, species: String?, height: Double?, weight: Double?, abilities: String?,
+                           hp: Int?, attack: Int?, defense: Int?, spattack: Int?, spdefense: Int?, speed: Int?) {
 
         val queue = Volley.newRequestQueue(this)
         val url = "http://192.168.2.94:3000/pokemon"
@@ -66,6 +71,18 @@ class AddPokemonActivity : AppCompatActivity() {
         ob.put("id", id)
         ob.put("name", name)
         ob.put("type", ar)
+        ob.put("species", species)
+        ob.put("height", height)
+        ob.put("weight", weight)
+        ob.put("abilities", abilities)
+        var ob2 = JSONObject()
+        ob2.put("hp", hp)
+        ob2.put("attack", attack)
+        ob2.put("defense", defense)
+        ob2.put("spattack", spattack)
+        ob2.put("spdefense", spdefense)
+        ob2.put("speed", speed)
+        ob.put("stats",ob2)
         ob.put("image", "empty")
 
           val jsonObjectRequest =  JsonObjectRequest(Request.Method.POST,url,ob,Response.Listener {

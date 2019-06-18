@@ -22,4 +22,6 @@
     <color name="rock">#ba6</color>
     <color name="steel">#aab</color>
     <color name="water">#39f</color>
+
+    <color name="theline">#AFAFAF</color>
 </resources>

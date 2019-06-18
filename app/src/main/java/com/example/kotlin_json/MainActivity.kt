@@ -53,7 +53,7 @@ class MainActivity : AppCompatActivity() {
             .withOnAccountHeaderListener { _, _, _ -> false }
             .build()
 
-        val item2 = PrimaryDrawerItem().withIdentifier(2).withName("Add More Pokemons!")
+//        val item2 = PrimaryDrawerItem().withIdentifier(2).withName("Add More Pokemons!")
 
 //create the drawer and remember the `Drawer` result object
         val result = DrawerBuilder()
@@ -61,16 +61,13 @@ class MainActivity : AppCompatActivity() {
             .withAccountHeader(headerResult)
             .withToolbar(toolbarMain)
             .addDrawerItems(
-                DividerDrawerItem(),
-                item2
+                DividerDrawerItem()
             )
             .withOnDrawerItemClickListener { _, _, drawerItem ->
                 if (drawerItem != null) {
                     var intent: Intent? = null
                     if (drawerItem.identifier == 1L) {
                         intent = Intent(this@MainActivity, MainActivity::class.java)
-                    } else if (drawerItem.identifier == 2L) {
-                        intent = Intent(this@MainActivity, AddPokemonActivity::class.java)
                     }
                     if (intent != null) {
                         this@MainActivity.startActivity(intent)
@@ -85,6 +82,11 @@ class MainActivity : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this)
 
         parseJSON()
+
+        fab.setOnClickListener {
+            var intent = Intent(this@MainActivity, AddPokemonActivity::class.java)
+            startActivity(intent)
+        }
 
         TxtSearch.setOnKeyListener(View.OnKeyListener { v, keyCode, event ->
             if (keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_UP) {

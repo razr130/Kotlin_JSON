@@ -1,5 +1,6 @@
 package com.example.kotlin_json
 
+import android.content.Context
 import android.graphics.Color
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -163,6 +164,9 @@ class DetailPokemonActivity : AppCompatActivity() {
                             else if(ob.getJSONArray("type").getString(i) == "Water"){
                                 IconType2Detail.setBackgroundResource(R.drawable.icon_water)
                             }
+                            else if(ob.getJSONArray("type").getString(i) == ""){
+                                IconType2Detail.visibility = View.GONE
+                            }
                         }
                     }
 
@@ -180,7 +184,14 @@ class DetailPokemonActivity : AppCompatActivity() {
                     TxtHeightDetailData.text = height
                     TxtWeightDetailData.text = weight
                     TxtAbilitiesDetailData.text = abilities
-                    Picasso.with(this).load(pokeimg).into(ImagePokemonDetail)
+                    if(pokeimg == ""){
+                        val context: Context = ImagePokemonDetail.getContext()
+                        var id = context.resources.getIdentifier("pokeball", "drawable", context.packageName)
+                        ImagePokemonDetail.setImageResource(id)
+                    }
+                    else{
+                        Picasso.with(this).load(pokeimg).into(ImagePokemonDetail)
+                    }
 //                    setupstatchart(hp,attack,defense,spattack,spdefense,speed)
                     setStatGraph(hp,attack,defense,spattack,spdefense,speed)
 

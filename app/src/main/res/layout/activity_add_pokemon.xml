@@ -59,22 +59,25 @@
             />
 
             <EditText
+                    android:background="@drawable/rounded_edittext"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="50dp"
                     android:id="@+id/TxtPokedexNoAdd"
                     android:layout_below="@+id/TxtTitleAdd"
                     android:hint="New Phone Number ... "
                     android:layout_margin="20dp"
                     android:inputType="number"
-                    android:layout_marginTop="10dp" />
+                    android:paddingLeft="20dp"
+                    android:layout_marginTop="10dp"/>
             <EditText
+                    android:background="@drawable/rounded_edittext"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="50dp"
                     android:id="@+id/TxtPokemonNameAdd"
                     android:layout_below="@+id/TxtPokedexNoAdd"
                     android:hint="New Name ... "
                     android:layout_margin="20dp"
-                    android:layout_marginTop="10dp" />
+                    android:paddingLeft="20dp"/>
             <com.jaredrummler.materialspinner.MaterialSpinner
                     android:id="@+id/spinner"
                     android:layout_width="match_parent"
@@ -91,20 +94,160 @@
                     android:layout_margin="20dp"
                     android:layout_marginTop="10dp"
             />
+            <EditText
+                    android:background="@drawable/rounded_edittext"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:id="@+id/TxtPokemonSpeciesAdd"
+                    android:layout_below="@+id/spinner2"
+                    android:hint="Species ... "
+                    android:layout_margin="20dp"
+                    android:paddingLeft="20dp"/>
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/linear1"
+                    android:layout_below="@id/TxtPokemonSpeciesAdd"
+                    android:textAlignment="center"
+                    android:gravity="center">
+                <EditText
+                        android:background="@drawable/rounded_edittext"
+                        android:layout_width="150dp"
+                        android:layout_height="50dp"
+                        android:id="@+id/TxtPokemonHeightAdd"
+                        android:hint="Height"
+                        android:layout_margin="15dp"
+                        android:paddingLeft="20dp"/>
+                <EditText
+                        android:background="@drawable/rounded_edittext"
+                        android:layout_width="150dp"
+                        android:layout_height="50dp"
+                        android:id="@+id/TxtPokemonWeightAdd"
+                        android:hint="Weight"
+                        android:layout_margin="15dp"
+                        android:paddingLeft="20dp"/>
 
+            </LinearLayout>
+            <EditText
+                    android:background="@drawable/rounded_edittext"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:id="@+id/TxtPokemonAbilitiesAdd"
+                    android:layout_below="@+id/linear1"
+                    android:hint="Species ... "
+                    android:layout_margin="20dp"
+                    android:paddingLeft="20dp"/>
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/linear2"
+                    android:layout_below="@+id/TxtPokemonAbilitiesAdd"
+                    android:gravity="center">
+                <View
+                        android:layout_centerHorizontal="true"
+                        android:layout_width="120dp"
+                        android:layout_height="1dp"
+                        android:background="@color/theline"
+                        android:id="@+id/theline"/>
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Stats"
+                        android:textColor="@color/theline"
+                        android:textSize="15sp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"/>
+                <View
+                        android:layout_centerHorizontal="true"
+                        android:layout_width="120dp"
+                        android:layout_height="1dp"
+                        android:background="@color/theline"
+                        android:id="@+id/theline2"/>
+            </LinearLayout>
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/linear3"
+                    android:layout_below="@+id/linear2"
+                    android:gravity="center">
+                <EditText
+                        android:background="@drawable/rounded_edittext"
+                        android:layout_width="150dp"
+                        android:layout_height="50dp"
+                        android:id="@+id/TxtPokemonHPAdd"
+                        android:hint="HP"
+                        android:layout_margin="20dp"
+                        android:paddingLeft="20dp"/>
+                <EditText
+                        android:background="@drawable/rounded_edittext"
+                        android:layout_width="150dp"
+                        android:layout_height="50dp"
+                        android:id="@+id/TxtPokemonAttackAdd"
+                        android:hint="Attack"
+                        android:layout_margin="20dp"
+                        android:paddingLeft="20dp"/>
+            </LinearLayout>
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/linear4"
+                    android:layout_below="@+id/linear3"
+                    android:gravity="center">
+                <EditText
+                        android:background="@drawable/rounded_edittext"
+                        android:layout_width="150dp"
+                        android:layout_height="50dp"
+                        android:id="@+id/TxtPokemonDefenseAdd"
+                        android:hint="Defense"
+                        android:layout_margin="20dp"
+                        android:paddingLeft="20dp"/>
+                <EditText
+                        android:background="@drawable/rounded_edittext"
+                        android:layout_width="150dp"
+                        android:layout_height="50dp"
+                        android:id="@+id/TxtPokemonSpAttackAdd"
+                        android:hint="Sp. Attack"
+                        android:layout_margin="20dp"
+                        android:paddingLeft="20dp"/>
+            </LinearLayout>
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/linear5"
+                    android:layout_below="@+id/linear4"
+                    android:gravity="center">
+                <EditText
+                        android:background="@drawable/rounded_edittext"
+                        android:layout_width="150dp"
+                        android:layout_height="50dp"
+                        android:id="@+id/TxtPokemonSpDefenseAdd"
+                        android:hint="Sp. Defense"
+                        android:layout_margin="20dp"
+                        android:paddingLeft="20dp"/>
+                <EditText
+                        android:background="@drawable/rounded_edittext"
+                        android:layout_width="150dp"
+                        android:layout_height="50dp"
+                        android:id="@+id/TxtPokemonSpeedAdd"
+                        android:hint="Speed"
+                        android:layout_margin="20dp"
+                        android:paddingLeft="20dp"/>
+            </LinearLayout>
             <Button
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/BtnAdd"
-                    android:layout_below="@+id/spinner2"
+                    android:layout_below="@+id/linear5"
                     android:background="@color/colorPrimaryDark"
                     android:layout_margin="20dp"
                     android:text="Add"
                     android:textColor="#ffffff"
                     android:textSize="20sp"
             />
-        </RelativeLayout>
 
+        </RelativeLayout>
 
 
     </ScrollView>
