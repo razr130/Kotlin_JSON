@@ -3,6 +3,8 @@
           package="com.example.kotlin_json">
 
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
             android:allowBackup="true"
@@ -11,6 +13,13 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
+        <activity android:name=".UploadFilePracticeActivity">
+        </activity>
+        <activity
+                android:name=".ui.login.LoginActivity"
+                android:label="@string/title_activity_login">
+
+        </activity>
         <activity android:name=".DetailPokemonActivity">
         </activity>
         <activity android:name=".EditPokemonActivity">

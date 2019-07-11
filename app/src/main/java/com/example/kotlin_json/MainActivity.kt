@@ -53,21 +53,22 @@ class MainActivity : AppCompatActivity() {
             .withOnAccountHeaderListener { _, _, _ -> false }
             .build()
 
-//        val item2 = PrimaryDrawerItem().withIdentifier(2).withName("Add More Pokemons!")
+        val item2 = PrimaryDrawerItem().withIdentifier(2).withName("Practice Upload")
 
-//create the drawer and remember the `Drawer` result object
+
         val result = DrawerBuilder()
             .withActivity(this)
             .withAccountHeader(headerResult)
             .withToolbar(toolbarMain)
             .addDrawerItems(
-                DividerDrawerItem()
+                DividerDrawerItem(),
+                item2
             )
             .withOnDrawerItemClickListener { _, _, drawerItem ->
                 if (drawerItem != null) {
                     var intent: Intent? = null
-                    if (drawerItem.identifier == 1L) {
-                        intent = Intent(this@MainActivity, MainActivity::class.java)
+                    if (drawerItem.identifier == 2L) {
+                        intent = Intent(this@MainActivity, UploadFilePracticeActivity::class.java)
                     }
                     if (intent != null) {
                         this@MainActivity.startActivity(intent)
