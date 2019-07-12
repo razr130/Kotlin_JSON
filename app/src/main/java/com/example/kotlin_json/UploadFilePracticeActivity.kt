@@ -3,6 +3,7 @@ package com.example.kotlin_json
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.Manifest
+import android.app.ProgressDialog
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -42,6 +43,7 @@ import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.util.*
 import java.util.List
+import kotlin.collections.ArrayList
 import kotlin.collections.Map
 
 
@@ -52,24 +54,35 @@ class UploadFilePracticeActivity : AppCompatActivity() {
     private var rQueue: RequestQueue? = null
     private var arraylist: ArrayList<HashMap<String, String>>? = null
     lateinit var bitmap: Bitmap
+    var bitmaparray: ArrayList<Bitmap> = ArrayList()
+    private val REQUEST_PICK_PHOTO = 1
+    var multiple = true
+    //val progressdialog = ProgressDialog(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_upload_file_practice)
 
+        //progressdialog.setMessage("uploading...")
         requestMultiplePermissions()
 
         BtnSelectImage.setOnClickListener {
-            val galleryIntent = Intent(
-                Intent.ACTION_PICK,
-                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-            )
-
-            startActivityForResult(galleryIntent, GALLERY)
+            val intent = Intent()
+            intent.type = "image/*"
+            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+            intent.action = Intent.ACTION_GET_CONTENT
+            startActivityForResult(Intent.createChooser(intent, "Select Picture"), REQUEST_PICK_PHOTO)
         }
 
         BtnUpload.setOnClickListener {
-            uploadImage(bitmap)
+            //progressdialog.show()
+            if(multiple == true){
+                uploadImagemultiple(bitmaparray)
+            }
+            else{
+                uploadImage(bitmap)
+            }
+
         }
 
     }
@@ -81,8 +94,11 @@ class UploadFilePracticeActivity : AppCompatActivity() {
             return
         }
         if (requestCode == GALLERY) {
-            if (data != null) {
-                val contentURI = data.data
+            val clipdata = data?.clipData
+
+            if (clipdata == null) {
+                multiple = false
+                val contentURI = data?.data
                 try {
 
                     //bitmap = MediaStore.Images.Media.getBitmap(this.contentResolver, contentURI)
@@ -97,6 +113,19 @@ class UploadFilePracticeActivity : AppCompatActivity() {
                     Toast.makeText(this@UploadFilePracticeActivity, "Failed!", Toast.LENGTH_SHORT).show()
                 }
 
+            }
+            else
+            {
+                multiple = true
+                ImagePreview.visibility = View.GONE
+                BtnUpload.visibility = View.VISIBLE
+                Toast.makeText(this@UploadFilePracticeActivity, "Multiple file selected!", Toast.LENGTH_SHORT).show()
+                for(i in 0 until clipdata.itemCount)
+                {
+                    val uri = clipdata.getItemAt(i).uri
+                    //bitmap = BitmapFactory.decodeStream(contentResolver.openInputStream(uri))
+                    bitmaparray.add(BitmapFactory.decodeStream(contentResolver.openInputStream(uri)))
+                }
             }
         }
     }
@@ -153,6 +182,74 @@ class UploadFilePracticeActivity : AppCompatActivity() {
         )
         rQueue = Volley.newRequestQueue(this@UploadFilePracticeActivity)
         rQueue!!.add(volleyMultipartRequest)
+       // rQueue!!.addRequestFinishedListener(RequestQueue.RequestFinishedListener<String> {
+//            if (progressdialog != null && progressdialog.isShowing())
+//                progressdialog.dismiss()
+//        })
+    }
+
+    private fun uploadImagemultiple(bitmap: ArrayList<Bitmap>) {
+
+        val volleyMultipartRequest = object : VolleyMultipartRequest(Request.Method.POST, url,
+            Response.Listener { response ->
+
+                rQueue!!.cache.clear()
+                try {
+                    val jsonObject = JSONObject(String(response.data))
+
+                    if (jsonObject.getString("success") == "1") {
+                        Toast.makeText(applicationContext,"success : " + jsonObject.getString("success"), Toast.LENGTH_LONG).show()
+                        Toast.makeText(applicationContext, jsonObject.getString("token"), Toast.LENGTH_LONG).show()
+                    }
+                    else{
+                        Toast.makeText(applicationContext,"success : " + jsonObject.getString("success"), Toast.LENGTH_LONG).show()
+                        Toast.makeText(applicationContext, jsonObject.getString("token"), Toast.LENGTH_LONG).show()
+                    }
+                } catch (e: JSONException) {
+                    e.printStackTrace()
+                }
+            },
+            Response.ErrorListener { error ->
+                Toast.makeText(applicationContext, error.message, Toast.LENGTH_SHORT).show()
+            }) {
+
+
+            @Throws(AuthFailureError::class)
+            override fun getParams(): kotlin.collections.Map<String, String> {
+                return HashMap()
+            }
+
+            /*
+             *pass files using below method
+             * */
+            override fun getByteDataMultiple(): HashMap<String, ArrayList<DataPart>> {
+                val params = HashMap<String, ArrayList<DataPart>>()
+                val date = Date()
+                val formatter = SimpleDateFormat("dd-mm-yyyy-HH-mma")
+                var datapartarray: ArrayList<DataPart> = ArrayList()
+                for(i in 0 until bitmap!!.size){
+                val imagename:  String = formatter.format(date) + i.toString()
+                datapartarray.add(DataPart("$imagename.jpeg", getFileDataFromDrawable(bitmap[i])))
+                }
+                params.put("image", datapartarray)
+                return params
+                datapartarray.clear()
+                bitmaparray.clear()
+            }
+        }
+
+
+        volleyMultipartRequest.retryPolicy = DefaultRetryPolicy(
+            0,
+            DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+            DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
+        )
+        rQueue = Volley.newRequestQueue(this@UploadFilePracticeActivity)
+        rQueue!!.add(volleyMultipartRequest)
+//        rQueue!!.addRequestFinishedListener(RequestQueue.RequestFinishedListener<String> {
+//            if (progressdialog != null && progressdialog.isShowing())
+//                progressdialog.dismiss()
+//        })
     }
 
     fun getFileDataFromDrawable(bitmap: Bitmap): ByteArray {

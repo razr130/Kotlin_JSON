@@ -40,6 +40,10 @@ open class VolleyMultipartRequest(
     open fun getByteData(): Map<String, DataPart>? {
         return null
     }
+    @Throws(AuthFailureError::class)
+    open fun getByteDataMultiple(): Map<String, ArrayList<DataPart>>? {
+        return null
+    }
 
     override fun getHeaders(): Map<String, String> = mHeaders ?: super.getHeaders()
 
@@ -63,6 +67,11 @@ open class VolleyMultipartRequest(
             val data = getByteData()
             if (data != null && data.size > 0) {
                 dataParse(dos, data)
+            }
+
+            val datamultiple = getByteDataMultiple()
+            if (datamultiple != null && datamultiple.size > 0) {
+                dataParseMultiple(dos, datamultiple)
             }
 
             // close multipart form data after text and file data
@@ -129,6 +138,12 @@ open class VolleyMultipartRequest(
             buildDataPart(dataOutputStream, value, key)
         }
     }
+    @Throws(IOException::class)
+    private fun dataParseMultiple(dataOutputStream: DataOutputStream, data: Map<String, ArrayList<DataPart>>) {
+        for ((key, value) in data) {
+            buildDataPartMultiple(dataOutputStream, value, key)
+        }
+    }
 
     /**
      * Write string data into header and data output stream.
@@ -184,13 +199,45 @@ open class VolleyMultipartRequest(
 
         dataOutputStream.writeBytes(lineEnd)
     }
+    @Throws(IOException::class)
+    private fun buildDataPartMultiple(dataOutputStream: DataOutputStream, dataFile: ArrayList<DataPart>, inputName: String) {
+
+        for(i in 0 until dataFile.size){
+            dataOutputStream.writeBytes(twoHyphens + boundary + lineEnd)
+            dataOutputStream.writeBytes(
+                "Content-Disposition: form-data; name=\"" +
+                        inputName + "\"; filename=\"" + dataFile[i].fileName + "\"" + lineEnd
+            )
+            if (dataFile[i].type != null && !dataFile[i].type!!.trim { it <= ' ' }.isEmpty()) {
+                dataOutputStream.writeBytes("Content-Type: " + dataFile[i].type + lineEnd)
+            }
+            dataOutputStream.writeBytes(lineEnd)
+
+            val fileInputStream = ByteArrayInputStream(dataFile[i].content)
+            var bytesAvailable = fileInputStream.available()
+
+            val maxBufferSize = 1024 * 1024
+            var bufferSize = Math.min(bytesAvailable, maxBufferSize)
+            val buffer = ByteArray(bufferSize)
+
+            var bytesRead = fileInputStream.read(buffer, 0, bufferSize)
+
+            while (bytesRead > 0) {
+                dataOutputStream.write(buffer, 0, bufferSize)
+                bytesAvailable = fileInputStream.available()
+                bufferSize = Math.min(bytesAvailable, maxBufferSize)
+                bytesRead = fileInputStream.read(buffer, 0, bufferSize)
+            }
+
+            dataOutputStream.writeBytes(lineEnd)
+        }
+
+    }
 
     inner class DataPart {
-        lateinit var fileName: String
-        lateinit var content: ByteArray
+         var fileName: String
+         var content: ByteArray
         val type: String? = null
-
-        constructor() {}
 
         constructor(name: String, data: ByteArray) {
             fileName = name
