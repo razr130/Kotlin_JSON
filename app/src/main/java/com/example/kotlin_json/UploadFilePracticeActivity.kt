@@ -49,7 +49,7 @@ import kotlin.collections.Map
 
 class UploadFilePracticeActivity : AppCompatActivity() {
 
-    val url: String = "http://192.168.2.8:9090/PostPokedex/upload_file"
+    val url: String = "http://192.168.2.184:9090/PostPokedex/upload_file"
     var GALLERY: Int = 1
     private var rQueue: RequestQueue? = null
     private var arraylist: ArrayList<HashMap<String, String>>? = null
@@ -57,6 +57,7 @@ class UploadFilePracticeActivity : AppCompatActivity() {
     var bitmaparray: ArrayList<Bitmap> = ArrayList()
     private val REQUEST_PICK_PHOTO = 1
     var multiple = true
+    var datapartarray: ArrayList<VolleyMultipartRequest.DataPart> = ArrayList()
     //val progressdialog = ProgressDialog(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -76,6 +77,7 @@ class UploadFilePracticeActivity : AppCompatActivity() {
 
         BtnUpload.setOnClickListener {
             //progressdialog.show()
+
             if(multiple == true){
                 uploadImagemultiple(bitmaparray)
             }
@@ -116,6 +118,7 @@ class UploadFilePracticeActivity : AppCompatActivity() {
             }
             else
             {
+
                 multiple = true
                 ImagePreview.visibility = View.GONE
                 BtnUpload.visibility = View.VISIBLE
@@ -126,6 +129,7 @@ class UploadFilePracticeActivity : AppCompatActivity() {
                     //bitmap = BitmapFactory.decodeStream(contentResolver.openInputStream(uri))
                     bitmaparray.add(BitmapFactory.decodeStream(contentResolver.openInputStream(uri)))
                 }
+
             }
         }
     }
@@ -226,15 +230,13 @@ class UploadFilePracticeActivity : AppCompatActivity() {
                 val params = HashMap<String, ArrayList<DataPart>>()
                 val date = Date()
                 val formatter = SimpleDateFormat("dd-mm-yyyy-HH-mma")
-                var datapartarray: ArrayList<DataPart> = ArrayList()
+
                 for(i in 0 until bitmap!!.size){
                 val imagename:  String = formatter.format(date) + i.toString()
                 datapartarray.add(DataPart("$imagename.jpeg", getFileDataFromDrawable(bitmap[i])))
                 }
                 params.put("image", datapartarray)
                 return params
-                datapartarray.clear()
-                bitmaparray.clear()
             }
         }
 
@@ -246,10 +248,10 @@ class UploadFilePracticeActivity : AppCompatActivity() {
         )
         rQueue = Volley.newRequestQueue(this@UploadFilePracticeActivity)
         rQueue!!.add(volleyMultipartRequest)
-//        rQueue!!.addRequestFinishedListener(RequestQueue.RequestFinishedListener<String> {
-//            if (progressdialog != null && progressdialog.isShowing())
-//                progressdialog.dismiss()
-//        })
+        rQueue!!.addRequestFinishedListener(RequestQueue.RequestFinishedListener<String> {
+            bitmaparray.clear()
+            datapartarray.clear()
+        })
     }
 
     fun getFileDataFromDrawable(bitmap: Bitmap): ByteArray {
