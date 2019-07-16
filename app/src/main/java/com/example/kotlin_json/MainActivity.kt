@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.KeyEvent
 import android.view.View
 import android.widget.Toast
+import com.android.volley.DefaultRetryPolicy
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonArrayRequest
@@ -35,6 +36,7 @@ class MainActivity : AppCompatActivity() {
 
     var pokedexlist = ArrayList<Pokedex>()
     lateinit var recyclerView: RecyclerView
+    var url = "http://192.168.2.184:9090/"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -106,15 +108,15 @@ class MainActivity : AppCompatActivity() {
 
     private fun parseJSON() {
         val queue = Volley.newRequestQueue(this)
-        val url = "http://192.168.2.94:3000/pokemon"
 
-        val arrayRequest = JsonArrayRequest(Request.Method.GET, url, null, Response.Listener<JSONArray>
+
+        val arrayRequest = JsonArrayRequest(Request.Method.GET, url + "pokedex/get_pokedex", null, Response.Listener<JSONArray>
         { response ->
             for (k in 0 until response.length()) {
                 val ob: JSONObject = response.getJSONObject(k)
 
-                val dexno: String = ob.getString("id")
-                val name: String = ob.getString("name")
+                val dexno: String = ob.getString("pokedex_id")
+                val name: String = ob.getString("pokemon_name")
                 val pokeimg: String = ob.getString("image")
                 var type = ""
 
@@ -129,20 +131,26 @@ class MainActivity : AppCompatActivity() {
             { error ->
                 Toast.makeText(this, error.toString(), Toast.LENGTH_LONG).show()
             })
+
+        arrayRequest.retryPolicy = DefaultRetryPolicy(
+            60000,
+            DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+            DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
+        )
         queue.add(arrayRequest)
     }
 
     private fun SearchJSON(keywords: String) {
         val queue = Volley.newRequestQueue(this)
-        val url = "http://192.168.2.94:3000/pokemon"
+        //val url = "http://192.168.2.94:3000/pokemon"
 
-        val arrayRequest = JsonArrayRequest(Request.Method.GET, url, null, Response.Listener<JSONArray>
+        val arrayRequest = JsonArrayRequest(Request.Method.GET, url + "pokedex/get_pokedex", null, Response.Listener<JSONArray>
         { response ->
             for (k in 0 until response.length()) {
                 val ob: JSONObject = response.getJSONObject(k)
 
-                val dexno: String = ob.getString("id")
-                val name: String = ob.getString("name")
+                val dexno: String = ob.getString("pokedex_id")
+                val name: String = ob.getString("pokemon_name")
                 val pokeimg: String = ob.getString("image")
                 var type = ""
 

@@ -103,6 +103,7 @@ class PokedexViewHolder(private val pokedexlist: ArrayList<Pokedex>) :
     }
 
     override fun onBindViewHolder(holder: PokedexHolder, i: Int) {
+        val imgurl = "http://192.168.2.184:9090/Content/Images/"
         val pokedex: Pokedex = pokedexlist[i]
         val type: Array<String> = pokedex.type.split(" ").toTypedArray()
         holder.txtpokedexno.text = pokedex.id
@@ -196,7 +197,7 @@ class PokedexViewHolder(private val pokedexlist: ArrayList<Pokedex>) :
             holder.pokemonimg.setImageResource(id)
         } else {
             val context: Context = holder.pokemonimg.getContext()
-            Picasso.with(context).load(pokedex.image).fit().centerInside().into(holder.pokemonimg)
+            Picasso.with(context).load(imgurl + pokedex.image).fit().centerInside().into(holder.pokemonimg)
         }
 
         holder.pokedex = pokedex

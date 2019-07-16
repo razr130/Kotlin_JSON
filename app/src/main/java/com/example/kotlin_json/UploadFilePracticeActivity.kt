@@ -4,10 +4,12 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.Manifest
 import android.app.ProgressDialog
+import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
+import android.provider.DocumentsContract
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
@@ -36,13 +38,12 @@ import kotlinx.android.synthetic.main.activity_upload_file_practice.*
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
+import java.io.*
 
-import java.io.ByteArrayOutputStream
-import java.io.IOException
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.util.*
-import java.util.List
+
 import kotlin.collections.ArrayList
 import kotlin.collections.Map
 
@@ -54,10 +55,14 @@ class UploadFilePracticeActivity : AppCompatActivity() {
     private var rQueue: RequestQueue? = null
     private var arraylist: ArrayList<HashMap<String, String>>? = null
     lateinit var bitmap: Bitmap
+    lateinit var videouri: Uri
     var bitmaparray: ArrayList<Bitmap> = ArrayList()
+    var videoarray: ArrayList<Uri> = ArrayList()
     private val REQUEST_PICK_PHOTO = 1
     var multiple = true
+    var resultvideo = false
     var datapartarray: ArrayList<VolleyMultipartRequest.DataPart> = ArrayList()
+    var videoPath = ""
     //val progressdialog = ProgressDialog(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,16 +80,17 @@ class UploadFilePracticeActivity : AppCompatActivity() {
             startActivityForResult(Intent.createChooser(intent, "Select Picture"), REQUEST_PICK_PHOTO)
         }
 
+        BtnSelectVideo.setOnClickListener {
+            resultvideo = true
+            val intent = Intent()
+            intent.type = "video/*"
+            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+            intent.action = Intent.ACTION_GET_CONTENT
+            startActivityForResult(Intent.createChooser(intent, "Select Video"), REQUEST_PICK_PHOTO)
+        }
+
         BtnUpload.setOnClickListener {
-            //progressdialog.show()
-
-            if(multiple == true){
-                uploadImagemultiple(bitmaparray)
-            }
-            else{
-                uploadImage(bitmap)
-            }
-
+          upload()
         }
 
     }
@@ -96,46 +102,48 @@ class UploadFilePracticeActivity : AppCompatActivity() {
             return
         }
         if (requestCode == GALLERY) {
-            val clipdata = data?.clipData
+            BtnUpload.visibility = View.VISIBLE
+            if (!resultvideo) {
+                val clipdata = data?.clipData
 
-            if (clipdata == null) {
-                multiple = false
                 val contentURI = data?.data
                 try {
 
-                    //bitmap = MediaStore.Images.Media.getBitmap(this.contentResolver, contentURI)
-                    bitmap = BitmapFactory.decodeStream(contentResolver.openInputStream(contentURI))
-                    ImagePreview.visibility = View.VISIBLE
-                    BtnUpload.visibility = View.VISIBLE
-                    ImagePreview.setImageBitmap(bitmap)
-
+                    if (clipdata == null) {
+                        bitmap = BitmapFactory.decodeStream(contentResolver.openInputStream(contentURI))
+                        bitmaparray.add(bitmap)
+                    } else {
+                        Toast.makeText(this@UploadFilePracticeActivity, "Multiple file selected!", Toast.LENGTH_SHORT)
+                            .show()
+                        for (i in 0 until clipdata.itemCount) {
+                            val uri = clipdata.getItemAt(i).uri
+                            //bitmap = BitmapFactory.decodeStream(contentResolver.openInputStream(uri))
+                            bitmaparray.add(BitmapFactory.decodeStream(contentResolver.openInputStream(uri)))
+                        }
+                    }
 
                 } catch (e: IOException) {
                     e.printStackTrace()
                     Toast.makeText(this@UploadFilePracticeActivity, "Failed!", Toast.LENGTH_SHORT).show()
                 }
-
-            }
-            else
-            {
-
-                multiple = true
+            } else {
+                val clipdata = data?.clipData
                 ImagePreview.visibility = View.GONE
                 BtnUpload.visibility = View.VISIBLE
-                Toast.makeText(this@UploadFilePracticeActivity, "Multiple file selected!", Toast.LENGTH_SHORT).show()
-                for(i in 0 until clipdata.itemCount)
-                {
+
+                for (i in 0 until clipdata!!.itemCount) {
                     val uri = clipdata.getItemAt(i).uri
                     //bitmap = BitmapFactory.decodeStream(contentResolver.openInputStream(uri))
-                    bitmaparray.add(BitmapFactory.decodeStream(contentResolver.openInputStream(uri)))
+                    videoarray.add(uri)
                 }
 
             }
         }
+
     }
 
-    private fun uploadImage(bitmap: Bitmap) {
 
+    private fun upload() {
         val volleyMultipartRequest = object : VolleyMultipartRequest(Request.Method.POST, url,
             Response.Listener { response ->
 
@@ -144,11 +152,18 @@ class UploadFilePracticeActivity : AppCompatActivity() {
                     val jsonObject = JSONObject(String(response.data))
 
                     if (jsonObject.getString("success") == "1") {
-                        Toast.makeText(applicationContext,"success : " + jsonObject.getString("success"), Toast.LENGTH_LONG).show()
+                        Toast.makeText(
+                            applicationContext,
+                            "success : " + jsonObject.getString("success"),
+                            Toast.LENGTH_LONG
+                        ).show()
                         Toast.makeText(applicationContext, jsonObject.getString("token"), Toast.LENGTH_LONG).show()
-                    }
-                    else{
-                        Toast.makeText(applicationContext,"success : " + jsonObject.getString("success"), Toast.LENGTH_LONG).show()
+                    } else {
+                        Toast.makeText(
+                            applicationContext,
+                            "success : " + jsonObject.getString("success"),
+                            Toast.LENGTH_LONG
+                        ).show()
                         Toast.makeText(applicationContext, jsonObject.getString("token"), Toast.LENGTH_LONG).show()
                     }
                 } catch (e: JSONException) {
@@ -165,75 +180,24 @@ class UploadFilePracticeActivity : AppCompatActivity() {
                 return HashMap()
             }
 
-            /*
-             *pass files using below method
-             * */
-            override fun getByteData(): Map<String, DataPart> {
-                val params = HashMap<String, DataPart>()
-                val date = Date()
-                val formatter = SimpleDateFormat("dd-mm-yyyy-HH-mma")
-                val imagename:  String = formatter.format(date)
-                params.put("image", DataPart("$imagename.jpeg", getFileDataFromDrawable(bitmap)))
-                return params
-            }
-        }
-
-
-        volleyMultipartRequest.retryPolicy = DefaultRetryPolicy(
-            0,
-            DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-            DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
-        )
-        rQueue = Volley.newRequestQueue(this@UploadFilePracticeActivity)
-        rQueue!!.add(volleyMultipartRequest)
-       // rQueue!!.addRequestFinishedListener(RequestQueue.RequestFinishedListener<String> {
-//            if (progressdialog != null && progressdialog.isShowing())
-//                progressdialog.dismiss()
-//        })
-    }
-
-    private fun uploadImagemultiple(bitmap: ArrayList<Bitmap>) {
-
-        val volleyMultipartRequest = object : VolleyMultipartRequest(Request.Method.POST, url,
-            Response.Listener { response ->
-
-                rQueue!!.cache.clear()
-                try {
-                    val jsonObject = JSONObject(String(response.data))
-
-                    if (jsonObject.getString("success") == "1") {
-                        Toast.makeText(applicationContext,"success : " + jsonObject.getString("success"), Toast.LENGTH_LONG).show()
-                        Toast.makeText(applicationContext, jsonObject.getString("token"), Toast.LENGTH_LONG).show()
-                    }
-                    else{
-                        Toast.makeText(applicationContext,"success : " + jsonObject.getString("success"), Toast.LENGTH_LONG).show()
-                        Toast.makeText(applicationContext, jsonObject.getString("token"), Toast.LENGTH_LONG).show()
-                    }
-                } catch (e: JSONException) {
-                    e.printStackTrace()
-                }
-            },
-            Response.ErrorListener { error ->
-                Toast.makeText(applicationContext, error.message, Toast.LENGTH_SHORT).show()
-            }) {
-
-
-            @Throws(AuthFailureError::class)
-            override fun getParams(): kotlin.collections.Map<String, String> {
-                return HashMap()
-            }
-
-            /*
-             *pass files using below method
-             * */
             override fun getByteDataMultiple(): HashMap<String, ArrayList<DataPart>> {
                 val params = HashMap<String, ArrayList<DataPart>>()
                 val date = Date()
-                val formatter = SimpleDateFormat("dd-mm-yyyy-HH-mma")
+                val formatter = SimpleDateFormat("dd-mm-yyyy-HH-mm-ss")
 
-                for(i in 0 until bitmap!!.size){
-                val imagename:  String = formatter.format(date) + i.toString()
-                datapartarray.add(DataPart("$imagename.jpeg", getFileDataFromDrawable(bitmap[i])))
+                if (videoarray != null) {
+                    for (i in videoarray.indices) {
+                        val imagename: String = formatter.format(date) + i.toString()
+                        getVideoPathFromURI(videoarray[i])
+                        val bytes = FileInputStream(File(videoPath)).use { input -> input.readBytes() }
+                        datapartarray.add(DataPart("$imagename.mp4", bytes))
+                    }
+                }
+                if(bitmaparray != null){
+                    for (i in 0 until bitmaparray.size) {
+                        val imagename: String = formatter.format(date) + i.toString()
+                        datapartarray.add(DataPart("$imagename.jpeg", getFileDataFromDrawable(bitmaparray[i])))
+                    }
                 }
                 params.put("image", datapartarray)
                 return params
@@ -242,7 +206,7 @@ class UploadFilePracticeActivity : AppCompatActivity() {
 
 
         volleyMultipartRequest.retryPolicy = DefaultRetryPolicy(
-            0,
+            30000,
             DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
             DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
         )
@@ -250,8 +214,54 @@ class UploadFilePracticeActivity : AppCompatActivity() {
         rQueue!!.add(volleyMultipartRequest)
         rQueue!!.addRequestFinishedListener(RequestQueue.RequestFinishedListener<String> {
             bitmaparray.clear()
+            videoarray.clear()
             datapartarray.clear()
         })
+    }
+
+    private fun getVideoPathFromURI(uri: Uri): String
+    {
+        var path: String = uri.path // uri = any content Uri
+
+        val databaseUri: Uri
+        val selection: String?
+        val selectionArgs: Array<String>?
+        if (path.contains("/document/video:"))
+        { // files selected from "Documents"
+            databaseUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI
+            selection = "_id=?"
+            selectionArgs = arrayOf(DocumentsContract.getDocumentId(uri).split(":")[1])
+        }
+        else
+        { // files selected from all other sources, especially on Samsung devices
+            databaseUri = uri
+            selection = null
+            selectionArgs = null
+        }
+        try
+        {
+            val projection = arrayOf(
+                MediaStore.Video.Media.DATA,
+                MediaStore.Video.Media._ID,
+                MediaStore.Video.Media.LATITUDE,
+                MediaStore.Video.Media.LONGITUDE,
+                MediaStore.Video.Media.DATE_TAKEN)
+
+            val cursor = contentResolver.query(databaseUri,
+                projection, selection, selectionArgs, null)
+
+            if (cursor.moveToFirst())
+            {
+                val columnIndex = cursor.getColumnIndex(projection[0])
+                videoPath = cursor.getString(columnIndex)
+            }
+            cursor.close()
+        }
+        catch (e: Exception)
+        {
+            Log.e("TAG", e.message, e)
+        }
+        return videoPath
     }
 
     fun getFileDataFromDrawable(bitmap: Bitmap): ByteArray {
@@ -259,6 +269,7 @@ class UploadFilePracticeActivity : AppCompatActivity() {
         bitmap.compress(Bitmap.CompressFormat.JPEG, 80, byteArrayOutputStream)
         return byteArrayOutputStream.toByteArray()
     }
+
 
     private fun requestMultiplePermissions() {
         Dexter.withActivity(this)

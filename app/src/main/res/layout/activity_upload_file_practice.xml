@@ -24,10 +24,18 @@
     <Button
             android:layout_width="300dp" android:layout_height="50dp"
             android:layout_below="@+id/BtnSelectImage"
+            android:id="@+id/BtnSelectVideo"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"
+            android:text="Select Video"/>
+    <Button
+            android:layout_width="300dp" android:layout_height="50dp"
+            android:layout_below="@+id/BtnSelectVideo"
             android:id="@+id/BtnUpload"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="10dp"
             android:text="Upload"
             android:visibility="gone"/>
+
 
 </RelativeLayout>
