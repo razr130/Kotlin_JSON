@@ -57,14 +57,22 @@
                     android:layout_marginTop="20dp"
                     android:textColor="#000000"
             />
+            <de.hdodenhof.circleimageview.CircleImageView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:id="@+id/PicPokemonAdd"
+                    android:layout_centerHorizontal="true"
+                    android:layout_below="@id/TxtTitleAdd"
+                    android:src="@drawable/pokeball"
+                    android:layout_marginTop="20dp"/>
 
             <EditText
                     android:background="@drawable/rounded_edittext"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:id="@+id/TxtPokedexNoAdd"
-                    android:layout_below="@+id/TxtTitleAdd"
-                    android:hint="New Phone Number ... "
+                    android:layout_below="@+id/PicPokemonAdd"
+                    android:hint="New Pokedex Number ... "
                     android:layout_margin="20dp"
                     android:inputType="number"
                     android:paddingLeft="20dp"
