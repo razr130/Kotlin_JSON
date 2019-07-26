@@ -103,7 +103,7 @@ class PokedexViewHolder(private val pokedexlist: ArrayList<Pokedex>) :
     }
 
     override fun onBindViewHolder(holder: PokedexHolder, i: Int) {
-        val imgurl = "http://192.168.2.184:9090/Content/Images/"
+        val imgurl = "http://192.168.2.146:9090/Content/Images/"
         val pokedex: Pokedex = pokedexlist[i]
         val type: Array<String> = pokedex.type.split(" ").toTypedArray()
         holder.txtpokedexno.text = pokedex.id

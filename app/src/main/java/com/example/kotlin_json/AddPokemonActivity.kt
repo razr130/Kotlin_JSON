@@ -1,6 +1,7 @@
 package com.example.kotlin_json
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -9,6 +10,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.text.Editable
+import android.widget.TextView
 import android.widget.Toast
 import com.android.volley.*
 import com.android.volley.toolbox.JsonObjectRequest
@@ -30,11 +32,12 @@ import kotlin.collections.ArrayList
 class AddPokemonActivity : AppCompatActivity() {
 
     var type = arrayListOf<String>()
-    val url = "http://192.168.2.184:9090/PostPokedex/post_dex"
+    val url = "http://192.168.2.146:9090/PostPokedex/post_dex"
     private var rQueue: RequestQueue? = null
     lateinit var bitmap: Bitmap
     var bitmaparray:ArrayList<Bitmap> = ArrayList()
     var datapartarray: ArrayList<VolleyMultipartRequest.DataPart> = ArrayList()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -170,7 +173,14 @@ class AddPokemonActivity : AppCompatActivity() {
             ar.put(ob3)
         }
         //ob.put("stats",ob2)
-
+        val builder = AlertDialog.Builder(this)
+        val dialogview = layoutInflater.inflate(R.layout.progress_dialogue,null)
+        val message = dialogview.findViewById<TextView>(R.id.TxtProgressMessage)
+        message.text = "Uploading data ... "
+        builder.setView(dialogview)
+        builder.setCancelable(false)
+        val dialog = builder.create()
+        dialog.show()
 
         val volleyMultipartRequest = object : VolleyMultipartRequest(Request.Method.POST, url,
             Response.Listener { response ->
@@ -232,6 +242,7 @@ class AddPokemonActivity : AppCompatActivity() {
         )
         rQueue = Volley.newRequestQueue(this@AddPokemonActivity)
         rQueue!!.add(volleyMultipartRequest)
+        dialog.dismiss()
         val intent = Intent(this, MainActivity::class.java)
         this.startActivity(intent)
         finish()

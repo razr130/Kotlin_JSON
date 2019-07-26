@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity() {
 
     var pokedexlist = ArrayList<Pokedex>()
     lateinit var recyclerView: RecyclerView
-    var url = "http://192.168.2.184:9090/"
+    var url = "http://192.168.2.146:9090/"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
