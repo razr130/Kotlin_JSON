@@ -1,6 +1,7 @@
 package com.example.kotlin_json.ViewHolder
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.app.PendingIntent.getActivity
 import android.content.Context
 import android.content.Intent
@@ -9,6 +10,7 @@ import android.content.Intent.getIntentOld
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.support.v4.content.ContextCompat.startActivity
+import android.support.v7.view.menu.MenuView
 import android.support.v7.widget.CardView
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -24,9 +26,14 @@ import com.android.volley.toolbox.Volley
 import com.example.kotlin_json.DetailPokemonActivity
 import com.example.kotlin_json.EditPokemonActivity
 import com.example.kotlin_json.MainActivity
+import com.example.kotlin_json.Model.Answer
 import com.example.kotlin_json.Model.Pokedex
 import com.example.kotlin_json.R
 import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.activity_upload_file_practice.*
+import kotlinx.android.synthetic.main.answer_dialog.*
+import kotlinx.android.synthetic.main.answer_dialog.view.*
+import kotlinx.android.synthetic.main.answer_dialog.view.TxtTestAnswer
 import kotlinx.android.synthetic.main.pokedex_layout.view.*
 import org.json.JSONArray
 import org.json.JSONObject
@@ -79,19 +86,36 @@ class PokedexViewHolder(private val pokedexlist: ArrayList<Pokedex>) :
                 popupmenu.show()
             }
             itemView.setOnClickListener {
-                val intent = Intent(itemView.context, DetailPokemonActivity::class.java)
-                intent.putExtra("id", pokedex?.id)
-                itemView.context.startActivity(intent)
+                //========real main section===========
+//                val intent = Intent(itemView.context, DetailPokemonActivity::class.java)
+//                intent.putExtra("id", pokedex?.id)
+//                itemView.context.startActivity(intent)
+
+                //=======testing dialog section
+
+                val mdialogview = LayoutInflater.from(itemView.context).inflate(R.layout.answer_dialog, null)
+                val muilder = AlertDialog.Builder(itemView.context).setView(mdialogview).setTitle("Answer Form")
+                val malertdialog = muilder.show()
+
+                //ini belom bisaaaaa
+                mdialogview.BtnAddPhotoTestAnswer.setOnClickListener {
+                    val intent = Intent()
+                    intent.type = "image/*"
+                    intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+                    intent.action = Intent.ACTION_GET_CONTENT
+                    //itemView.context.startActivityForResult(intent, 1)
+                }
+
+                mdialogview.BtnSubmitAnswer.setOnClickListener {
+                    malertdialog.dismiss()
+                    MainActivity.answerlist.add(Answer(pokedex?.id, mdialogview.TxtTestAnswer.text.toString()))
+                }
+
             }
         }
 
     }
 
-    fun refresh(data: ArrayList<Pokedex>) {
-        data.clear()
-        data.addAll(data)
-        notifyDataSetChanged()
-    }
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): PokedexHolder {
         val v = LayoutInflater.from(p0.context).inflate(R.layout.pokedex_layout, p0, false)

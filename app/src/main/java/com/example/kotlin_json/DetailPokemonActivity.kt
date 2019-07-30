@@ -34,6 +34,7 @@ import com.github.mikephil.charting.utils.ViewPortHandler
 
 class DetailPokemonActivity : AppCompatActivity() {
     lateinit var TheChart : HorizontalBarChart
+    var url = "http://192.168.2.146:9090/"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail_pokemon)
@@ -48,16 +49,16 @@ class DetailPokemonActivity : AppCompatActivity() {
 
     private fun parseJSON(id: String) {
         val queue = Volley.newRequestQueue(this)
-        val url = "http://192.168.2.94:3000/pokemon?id=" + id
+        val imgurl = "http://192.168.2.146:9090/Content/Images/"
 
         val arrayRequest = JsonArrayRequest(
-            Request.Method.GET, url, null, Response.Listener<JSONArray>
+            Request.Method.GET, url + "pokedex/get_pokedex?id=" + id, null, Response.Listener<JSONArray>
             { response ->
                 for (k in 0 until response.length()) {
                     val ob: JSONObject = response.getJSONObject(k)
 
-                    val dexno: String = ob.getString("id")
-                    val name: String = ob.getString("name")
+                    val dexno: String = ob.getString("pokedex_id")
+                    val name: String = ob.getString("pokemon_name")
                     val pokeimg: String = ob.getString("image")
                     val species: String = ob.getString("species")
                     val height: String = ob.getString("height")
@@ -170,7 +171,7 @@ class DetailPokemonActivity : AppCompatActivity() {
                         }
                     }
 
-                    val statarray = ob.getJSONObject("stats")
+                    val statarray = ob.getJSONObject("stat")
                     var hp = statarray.getInt("hp")
                     var attack = statarray.getInt("attack")
                     var defense = statarray.getInt("defense")
@@ -190,7 +191,7 @@ class DetailPokemonActivity : AppCompatActivity() {
                         ImagePokemonDetail.setImageResource(id)
                     }
                     else{
-                        Picasso.with(this).load(pokeimg).into(ImagePokemonDetail)
+                        Picasso.with(this).load(imgurl + pokeimg).into(ImagePokemonDetail)
                     }
 //                    setupstatchart(hp,attack,defense,spattack,spdefense,speed)
                     setStatGraph(hp,attack,defense,spattack,spdefense,speed)

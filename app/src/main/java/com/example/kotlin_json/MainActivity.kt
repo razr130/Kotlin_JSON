@@ -12,10 +12,12 @@ import android.view.View
 import android.widget.Toast
 import com.android.volley.DefaultRetryPolicy
 import com.android.volley.Request
+import com.android.volley.RequestQueue
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonArrayRequest
 import com.android.volley.toolbox.RequestFuture
 import com.android.volley.toolbox.Volley
+import com.example.kotlin_json.Model.Answer
 import com.example.kotlin_json.Model.Pokedex
 import com.example.kotlin_json.ViewHolder.PokedexViewHolder
 import com.mikepenz.materialdrawer.AccountHeader
@@ -34,6 +36,9 @@ import java.util.ArrayList
 
 class MainActivity : AppCompatActivity() {
 
+companion object{
+    var answerlist = ArrayList<Answer>()
+}
     var pokedexlist = ArrayList<Pokedex>()
     lateinit var recyclerView: RecyclerView
     var url = "http://192.168.2.146:9090/"
@@ -91,6 +96,12 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        BtnTest.setOnClickListener {
+            for(i in 0 until answerlist.size){
+                Toast.makeText(this, answerlist[i].answer, Toast.LENGTH_LONG).show()
+            }
+        }
+
         TxtSearch.setOnKeyListener(View.OnKeyListener { v, keyCode, event ->
             if (keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_UP) {
                 if (TxtSearch.text.isEmpty()) {
@@ -124,7 +135,6 @@ class MainActivity : AppCompatActivity() {
                     type += ob.getJSONArray("type").getString(i) + " "
                 }
                 pokedexlist.add(Pokedex(dexno, name, pokeimg, type))
-                recyclerView.adapter = PokedexViewHolder(pokedexlist)
             }
         },
             Response.ErrorListener
@@ -138,6 +148,9 @@ class MainActivity : AppCompatActivity() {
             DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
         )
         queue.add(arrayRequest)
+        queue.addRequestFinishedListener(RequestQueue.RequestFinishedListener<String> {
+            recyclerView.adapter = PokedexViewHolder(pokedexlist)
+        })
     }
 
     private fun SearchJSON(keywords: String) {
@@ -159,7 +172,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 if (name.toLowerCase().contains(keywords)) {
                     pokedexlist.add(Pokedex(dexno, name, pokeimg, type))
-                    recyclerView.adapter = PokedexViewHolder(pokedexlist)
+
                 } else {
                     if (k == response.length() - 1) {
                         Toast.makeText(this, "Pokemon not found.", Toast.LENGTH_LONG).show()
@@ -172,5 +185,8 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this, error.toString(), Toast.LENGTH_LONG).show()
             })
         queue.add(arrayRequest)
+        queue.addRequestFinishedListener(RequestQueue.RequestFinishedListener<String> {
+            recyclerView.adapter = PokedexViewHolder(pokedexlist)
+        })
     }
 }
