@@ -41,7 +41,7 @@ companion object{
 }
     var pokedexlist = ArrayList<Pokedex>()
     lateinit var recyclerView: RecyclerView
-    var url = "http://192.168.2.146:9090/"
+    var url = "http://192.168.2.196:9090/"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -115,6 +115,14 @@ companion object{
             }
             false
         })
+    }
+
+    fun opengallery(){
+        val intent = Intent()
+        intent.type = "image/*"
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+        intent.action = Intent.ACTION_GET_CONTENT
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), 1)
     }
 
     private fun parseJSON() {

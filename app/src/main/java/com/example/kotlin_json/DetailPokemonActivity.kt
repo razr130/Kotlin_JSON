@@ -34,7 +34,7 @@ import com.github.mikephil.charting.utils.ViewPortHandler
 
 class DetailPokemonActivity : AppCompatActivity() {
     lateinit var TheChart : HorizontalBarChart
-    var url = "http://192.168.2.146:9090/"
+    var url = "http://192.168.2.196:9090/"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail_pokemon)
@@ -49,7 +49,7 @@ class DetailPokemonActivity : AppCompatActivity() {
 
     private fun parseJSON(id: String) {
         val queue = Volley.newRequestQueue(this)
-        val imgurl = "http://192.168.2.146:9090/Content/Images/"
+        val imgurl = "http://192.168.2.196:9090/Content/Images/"
 
         val arrayRequest = JsonArrayRequest(
             Request.Method.GET, url + "pokedex/get_pokedex?id=" + id, null, Response.Listener<JSONArray>

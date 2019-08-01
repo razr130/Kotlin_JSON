@@ -32,7 +32,7 @@ import kotlin.collections.ArrayList
 class AddPokemonActivity : AppCompatActivity() {
 
     var type = arrayListOf<String>()
-    val url = "http://192.168.2.146:9090/PostPokedex/post_dex"
+    val url = "http://192.168.2.196:9090/PostPokedex/post_dex"
     private var rQueue: RequestQueue? = null
     lateinit var bitmap: Bitmap
     var bitmaparray:ArrayList<Bitmap> = ArrayList()
@@ -166,9 +166,10 @@ class AddPokemonActivity : AppCompatActivity() {
         ob2.put("speed", speed)
 
         var ar = JSONArray()
-        var ob3 = JSONObject()
+
 
         for (i in 0 until type.size) {
+            var ob3 = JSONObject()
             ob3.put("type1", type.get(i))
             ar.put(ob3)
         }

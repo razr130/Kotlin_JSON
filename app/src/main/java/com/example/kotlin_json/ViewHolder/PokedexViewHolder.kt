@@ -9,6 +9,7 @@ import android.content.Intent.getIntent
 import android.content.Intent.getIntentOld
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.support.v4.app.ActivityCompat.startActivityForResult
 import android.support.v4.content.ContextCompat.startActivity
 import android.support.v7.view.menu.MenuView
 import android.support.v7.widget.CardView
@@ -87,29 +88,20 @@ class PokedexViewHolder(private val pokedexlist: ArrayList<Pokedex>) :
             }
             itemView.setOnClickListener {
                 //========real main section===========
-//                val intent = Intent(itemView.context, DetailPokemonActivity::class.java)
-//                intent.putExtra("id", pokedex?.id)
-//                itemView.context.startActivity(intent)
+                val intent = Intent(itemView.context, DetailPokemonActivity::class.java)
+                intent.putExtra("id", pokedex?.id)
+                itemView.context.startActivity(intent)
 
                 //=======testing dialog section
 
-                val mdialogview = LayoutInflater.from(itemView.context).inflate(R.layout.answer_dialog, null)
-                val muilder = AlertDialog.Builder(itemView.context).setView(mdialogview).setTitle("Answer Form")
-                val malertdialog = muilder.show()
-
-                //ini belom bisaaaaa
-                mdialogview.BtnAddPhotoTestAnswer.setOnClickListener {
-                    val intent = Intent()
-                    intent.type = "image/*"
-                    intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
-                    intent.action = Intent.ACTION_GET_CONTENT
-                    //itemView.context.startActivityForResult(intent, 1)
-                }
-
-                mdialogview.BtnSubmitAnswer.setOnClickListener {
-                    malertdialog.dismiss()
-                    MainActivity.answerlist.add(Answer(pokedex?.id, mdialogview.TxtTestAnswer.text.toString()))
-                }
+//                val mdialogview = LayoutInflater.from(itemView.context).inflate(R.layout.answer_dialog, null)
+//                val muilder = AlertDialog.Builder(itemView.context).setView(mdialogview).setTitle("Answer Form")
+//                val malertdialog = muilder.show()
+//
+//                mdialogview.BtnSubmitAnswer.setOnClickListener {
+//                    malertdialog.dismiss()
+//                    MainActivity.answerlist.add(Answer(pokedex?.id, mdialogview.TxtTestAnswer.text.toString()))
+//                }
 
             }
         }
@@ -127,7 +119,7 @@ class PokedexViewHolder(private val pokedexlist: ArrayList<Pokedex>) :
     }
 
     override fun onBindViewHolder(holder: PokedexHolder, i: Int) {
-        val imgurl = "http://192.168.2.146:9090/Content/Images/"
+        val imgurl = "http://192.168.2.196:9090/Content/Images/"
         val pokedex: Pokedex = pokedexlist[i]
         val type: Array<String> = pokedex.type.split(" ").toTypedArray()
         holder.txtpokedexno.text = pokedex.id
