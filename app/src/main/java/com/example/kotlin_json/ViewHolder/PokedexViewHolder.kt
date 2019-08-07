@@ -24,12 +24,9 @@ import com.android.volley.Response
 import com.android.volley.toolbox.JsonArrayRequest
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
-import com.example.kotlin_json.DetailPokemonActivity
-import com.example.kotlin_json.EditPokemonActivity
-import com.example.kotlin_json.MainActivity
+import com.example.kotlin_json.*
 import com.example.kotlin_json.Model.Answer
 import com.example.kotlin_json.Model.Pokedex
-import com.example.kotlin_json.R
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_upload_file_practice.*
 import kotlinx.android.synthetic.main.answer_dialog.*
@@ -67,7 +64,7 @@ class PokedexViewHolder(private val pokedexlist: ArrayList<Pokedex>) :
                         }
                         R.id.menu_delete -> {
                             val queue = Volley.newRequestQueue(itemView.context)
-                            val url = "http://192.168.2.94:3000/pokemon/" + pokedex?.id
+                            val url = Constant.BASE_URL + pokedex?.id
                             val arrayRequest = StringRequest(
                                 Request.Method.DELETE, url, Response.Listener<String>
                                 {
@@ -119,7 +116,7 @@ class PokedexViewHolder(private val pokedexlist: ArrayList<Pokedex>) :
     }
 
     override fun onBindViewHolder(holder: PokedexHolder, i: Int) {
-        val imgurl = "http://192.168.2.196:9090/Content/Images/"
+        val imgurl =  Constant.BASE_URL + "Content/Images/"
         val pokedex: Pokedex = pokedexlist[i]
         val type: Array<String> = pokedex.type.split(" ").toTypedArray()
         holder.txtpokedexno.text = pokedex.id

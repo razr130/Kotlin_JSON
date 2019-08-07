@@ -1,5 +1,6 @@
 package com.example.kotlin_json
 
+import android.app.ProgressDialog
 import android.content.DialogInterface
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
@@ -9,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.KeyEvent
 import android.view.View
+import android.widget.Adapter
 import android.widget.Toast
 import com.android.volley.DefaultRetryPolicy
 import com.android.volley.Request
@@ -36,12 +38,13 @@ import java.util.ArrayList
 
 class MainActivity : AppCompatActivity() {
 
-companion object{
-    var answerlist = ArrayList<Answer>()
-}
+
     var pokedexlist = ArrayList<Pokedex>()
     lateinit var recyclerView: RecyclerView
-    var url = "http://192.168.2.196:9090/"
+    var url: String = Constant.BASE_URL
+    lateinit var madapter: PokedexViewHolder
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -89,17 +92,13 @@ companion object{
         recyclerView.setHasFixedSize(true)
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        parseJSON()
+
+
+
 
         fab.setOnClickListener {
             var intent = Intent(this@MainActivity, AddPokemonActivity::class.java)
             startActivity(intent)
-        }
-
-        BtnTest.setOnClickListener {
-            for(i in 0 until answerlist.size){
-                Toast.makeText(this, answerlist[i].answer, Toast.LENGTH_LONG).show()
-            }
         }
 
         TxtSearch.setOnKeyListener(View.OnKeyListener { v, keyCode, event ->
@@ -117,15 +116,17 @@ companion object{
         })
     }
 
-    fun opengallery(){
-        val intent = Intent()
-        intent.type = "image/*"
-        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
-        intent.action = Intent.ACTION_GET_CONTENT
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"), 1)
+    override fun onResume() {
+        super.onResume()
+        pokedexlist.clear()
+        parseJSON()
     }
 
+
     private fun parseJSON() {
+        val loading = ProgressDialog(this)
+        loading.setMessage("Loading pokedex...")
+        loading.show()
         val queue = Volley.newRequestQueue(this)
 
 
@@ -143,6 +144,7 @@ companion object{
                     type += ob.getJSONArray("type").getString(i) + " "
                 }
                 pokedexlist.add(Pokedex(dexno, name, pokeimg, type))
+
             }
         },
             Response.ErrorListener
@@ -157,7 +159,10 @@ companion object{
         )
         queue.add(arrayRequest)
         queue.addRequestFinishedListener(RequestQueue.RequestFinishedListener<String> {
-            recyclerView.adapter = PokedexViewHolder(pokedexlist)
+            madapter = PokedexViewHolder(pokedexlist)
+            //madapter.notifyDataSetChanged()
+            recyclerView.adapter = madapter
+            loading.dismiss()
         })
     }
 

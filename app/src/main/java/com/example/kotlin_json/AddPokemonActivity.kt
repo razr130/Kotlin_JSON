@@ -2,6 +2,7 @@ package com.example.kotlin_json
 
 import android.app.Activity
 import android.app.AlertDialog
+import android.app.ProgressDialog
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -16,6 +17,7 @@ import com.android.volley.*
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.example.kotlin_json.CustomRequest.VolleyMultipartRequest
+import com.example.kotlin_json.ViewHolder.PokedexViewHolder
 import com.jaredrummler.materialspinner.MaterialSpinner
 import kotlinx.android.synthetic.main.activity_add_pokemon.*
 import org.json.JSONArray
@@ -32,11 +34,12 @@ import kotlin.collections.ArrayList
 class AddPokemonActivity : AppCompatActivity() {
 
     var type = arrayListOf<String>()
-    val url = "http://192.168.2.196:9090/PostPokedex/post_dex"
+    val url = Constant.BASE_URL + "PostPokedex/post_dex"
     private var rQueue: RequestQueue? = null
     lateinit var bitmap: Bitmap
     var bitmaparray:ArrayList<Bitmap> = ArrayList()
     var datapartarray: ArrayList<VolleyMultipartRequest.DataPart> = ArrayList()
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -146,7 +149,9 @@ class AddPokemonActivity : AppCompatActivity() {
         spdefense: Int?,
         speed: Int?
     ) {
-
+        val loading = ProgressDialog(this)
+        loading.setMessage("Adding dex data...")
+        loading.show()
         var ob = JSONObject()
         ob.put("pokedex_id", id)
         ob.put("pokemon_name", name)
@@ -191,19 +196,14 @@ class AddPokemonActivity : AppCompatActivity() {
                     val jsonObject = JSONObject(String(response.data))
 
                     if (jsonObject.getString("success") == "1") {
-                        Toast.makeText(
-                            applicationContext,
-                            "success : " + jsonObject.getString("success"),
-                            Toast.LENGTH_LONG
-                        ).show()
-                        Toast.makeText(applicationContext, jsonObject.getString("token"), Toast.LENGTH_LONG).show()
+
+                        loading.dismiss()
+                        this.finish()
+
                     } else {
-                        Toast.makeText(
-                            applicationContext,
-                            "success : " + jsonObject.getString("success"),
-                            Toast.LENGTH_LONG
-                        ).show()
+
                         Toast.makeText(applicationContext, jsonObject.getString("token"), Toast.LENGTH_LONG).show()
+                        this.finish()
                     }
                 } catch (e: JSONException) {
                     e.printStackTrace()
@@ -244,9 +244,6 @@ class AddPokemonActivity : AppCompatActivity() {
         rQueue = Volley.newRequestQueue(this@AddPokemonActivity)
         rQueue!!.add(volleyMultipartRequest)
         dialog.dismiss()
-        val intent = Intent(this, MainActivity::class.java)
-        this.startActivity(intent)
-        finish()
     }
 
     fun getFileDataFromDrawable(bitmap: Bitmap): ByteArray {
