@@ -5,23 +5,41 @@
     <color name="colorAccent">#F44336</color>
 
     <color name="grass">#7c5</color>
+    <color name="grass_lighter">#99D676</color>
     <color name="bug">#ab2</color>
+    <color name="bug_lighter">#D1DD80</color>
     <color name="dark">#754</color>
+    <color name="dark_lighter">#D1977B</color>
     <color name="dragon">#76e</color>
+    <color name="dragon_lighter">#A097DB</color>
     <color name="electric">#fc3</color>
+    <color name="electric_lighter">#D8C076</color>
     <color name="fairy">#e9e</color>
+    <color name="fairy_lighter">#CA96CA</color>
     <color name="fighting">#b54</color>
+    <color name="fighting_lighter">#D89489</color>
     <color name="fire">#f42</color>
+    <color name="fire_lighter">#E47D6A</color>
     <color name="flying">#89f</color>
+    <color name="flying_lighter">#9EA7E0</color>
     <color name="ghost">#66b</color>
+    <color name="ghost_lighter">#9494DF</color>
     <color name="ground">#db5</color>
+    <color name="ground_lighter">#D5C187</color>
     <color name="ice">#6cf</color>
+    <color name="ice_lighter">#8EBFD8</color>
     <color name="normal">#aa9</color>
+    <color name="normal_lighter">#CFCFB9</color>
     <color name="poison">#a59</color>
+    <color name="poison_lighter">#D189C3</color>
     <color name="psychic">#f59</color>
+    <color name="psychic_lighter">#D88EAC</color>
     <color name="rock">#ba6</color>
+    <color name="rock_lighter">#E0D299</color>
     <color name="steel">#aab</color>
+    <color name="steel_lighter">#BFBFE6</color>
     <color name="water">#39f</color>
+    <color name="water_lighter">#96BCE2</color>
 
     <color name="theline">#AFAFAF</color>
 </resources>

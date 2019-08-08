@@ -1,6 +1,8 @@
 package com.example.kotlin_json.Model
 
-data class Pokedex(var id: String, var name: String, var image:String, var type:String)
+import java.io.Serializable
+
+data class Pokedex(var id: String, var name: String, var image:String, var type:String, var isanswer:Boolean=false) : Serializable
 
 //    var id: String = ""
 //    var name: String = ""

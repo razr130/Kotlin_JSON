@@ -1,5 +1,6 @@
 package com.example.kotlin_json.ViewHolder
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
 import android.app.PendingIntent.getActivity
@@ -9,6 +10,7 @@ import android.content.Intent.getIntent
 import android.content.Intent.getIntentOld
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.support.v4.app.ActivityCompat.startActivityForResult
 import android.support.v4.content.ContextCompat.startActivity
 import android.support.v7.view.menu.MenuView
@@ -42,12 +44,13 @@ class PokedexViewHolder(private val pokedexlist: ArrayList<Pokedex>) :
     RecyclerView.Adapter<PokedexViewHolder.PokedexHolder>() {
 
 
-    class PokedexHolder(itemView: View, var pokedex: Pokedex? = null) : RecyclerView.ViewHolder(itemView) {
+    class PokedexHolder(itemView: View, var pokedex: Pokedex? = null, var i: Int? = null) : RecyclerView.ViewHolder(itemView) {
         var txtpokemonname = itemView.findViewById(R.id.TxtPokemonName) as TextView
         var txtpokedexno = itemView.findViewById(R.id.TxtPokedexNo) as TextView
         var type1 = itemView.findViewById(R.id.IconType1) as Button
         var type2 = itemView.findViewById(R.id.IconType2) as Button
         var pokemonimg = itemView.findViewById(R.id.PictPokemon) as ImageView
+        var card = itemView.findViewById(R.id.pokedex_card) as CardView
 
         init {
             itemView.pokedex_menu.setOnClickListener {
@@ -84,27 +87,22 @@ class PokedexViewHolder(private val pokedexlist: ArrayList<Pokedex>) :
                 popupmenu.show()
             }
             itemView.setOnClickListener {
-                //========real main section===========
-                val intent = Intent(itemView.context, DetailPokemonActivity::class.java)
-                intent.putExtra("id", pokedex?.id)
+//                val intent = Intent(itemView.context, DetailPokemonActivity::class.java)
+//                intent.putExtra("id", pokedex)
+//                itemView.context.startActivity(intent)
+                val intent = Intent(itemView.context, AddPokemonActivity::class.java)
+                intent.putExtra("object", pokedex)
+                intent.putExtra("index", i)
                 itemView.context.startActivity(intent)
-
-                //=======testing dialog section
-
-//                val mdialogview = LayoutInflater.from(itemView.context).inflate(R.layout.answer_dialog, null)
-//                val muilder = AlertDialog.Builder(itemView.context).setView(mdialogview).setTitle("Answer Form")
-//                val malertdialog = muilder.show()
-//
-//                mdialogview.BtnSubmitAnswer.setOnClickListener {
-//                    malertdialog.dismiss()
-//                    MainActivity.answerlist.add(Answer(pokedex?.id, mdialogview.TxtTestAnswer.text.toString()))
-//                }
-
             }
         }
 
     }
 
+    fun update(poke: Pokedex, i: Int){
+        pokedexlist.set(i, poke)
+        notifyDataSetChanged()
+    }
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): PokedexHolder {
         val v = LayoutInflater.from(p0.context).inflate(R.layout.pokedex_layout, p0, false)
@@ -115,12 +113,16 @@ class PokedexViewHolder(private val pokedexlist: ArrayList<Pokedex>) :
         return pokedexlist.size
     }
 
+    @SuppressLint("ResourceAsColor")
     override fun onBindViewHolder(holder: PokedexHolder, i: Int) {
         val imgurl =  Constant.BASE_URL + "Content/Images/"
         val pokedex: Pokedex = pokedexlist[i]
         val type: Array<String> = pokedex.type.split(" ").toTypedArray()
         holder.txtpokedexno.text = pokedex.id
         holder.txtpokemonname.text = pokedex.name
+        if(pokedex.isanswer){
+            holder.txtpokedexno.text = "kejawabbbb"
+        }
         if (type[1].isEmpty() || type[1] == "") {
             holder.type2.visibility = View.GONE
         } else {
@@ -168,40 +170,58 @@ class PokedexViewHolder(private val pokedexlist: ArrayList<Pokedex>) :
         holder.type1.text = type[0]
         if (holder.type1.text == "Normal") {
             holder.type1.setBackgroundResource(R.drawable.icon_normal)
+            holder.card.setBackgroundResource(R.color.normal_lighter)
         } else if (holder.type1.text == "Bug") {
             holder.type1.setBackgroundResource(R.drawable.icon_bug)
+            holder.card.setBackgroundResource(R.color.bug_lighter)
         } else if (holder.type1.text == "Dark") {
             holder.type1.setBackgroundResource(R.drawable.icon_dark)
+            holder.card.setBackgroundResource(R.color.dark_lighter)
         } else if (holder.type1.text == "Dragon") {
             holder.type1.setBackgroundResource(R.drawable.icon_dragon)
+            holder.card.setBackgroundResource(R.color.dragon_lighter)
         } else if (holder.type1.text == "Electric") {
             holder.type1.setBackgroundResource(R.drawable.icon_electric)
+            holder.card.setBackgroundResource(R.color.electric_lighter)
         } else if (holder.type1.text == "Fairy") {
             holder.type1.setBackgroundResource(R.drawable.icon_fairy)
+            holder.card.setBackgroundResource(R.color.fairy_lighter)
         } else if (holder.type1.text == "Fighting") {
             holder.type1.setBackgroundResource(R.drawable.icon_fighting)
+            holder.card.setBackgroundResource(R.color.fighting_lighter)
         } else if (holder.type1.text == "Fire") {
             holder.type1.setBackgroundResource(R.drawable.icon_fire)
+            holder.card.setBackgroundResource(R.color.fire_lighter)
         } else if (holder.type1.text == "Flying") {
             holder.type1.setBackgroundResource(R.drawable.icon_flying)
+            holder.card.setBackgroundResource(R.color.flying_lighter)
         } else if (holder.type1.text == "Ghost") {
             holder.type1.setBackgroundResource(R.drawable.icon_ghost)
+            holder.card.setBackgroundResource(R.color.ghost_lighter)
         } else if (holder.type1.text == "Grass") {
             holder.type1.setBackgroundResource(R.drawable.icon_grass)
+            holder.card.setBackgroundResource(R.color.grass_lighter)
         } else if (holder.type1.text == "Ground") {
             holder.type1.setBackgroundResource(R.drawable.icon_ground)
+            holder.card.setBackgroundResource(R.color.ground_lighter)
         } else if (holder.type1.text == "Ice") {
             holder.type1.setBackgroundResource(R.drawable.icon_ice)
+            holder.card.setBackgroundResource(R.color.ice_lighter)
         } else if (holder.type1.text == "Poison") {
             holder.type1.setBackgroundResource(R.drawable.icon_poison)
+            holder.card.setBackgroundResource(R.color.poison_lighter)
         } else if (holder.type1.text == "Psychic") {
             holder.type1.setBackgroundResource(R.drawable.icon_psychic)
+            holder.card.setBackgroundResource(R.color.psychic_lighter)
         } else if (holder.type1.text == "Rock") {
             holder.type1.setBackgroundResource(R.drawable.icon_rock)
+            holder.card.setBackgroundResource(R.color.rock_lighter)
         } else if (holder.type1.text == "Steel") {
             holder.type1.setBackgroundResource(R.drawable.icon_steel)
+            holder.card.setBackgroundResource(R.color.steel_lighter)
         } else if (holder.type1.text == "Water") {
             holder.type1.setBackgroundResource(R.drawable.icon_water)
+            holder.card.setBackgroundResource(R.color.water_lighter)
         }
 
         if (pokedex.image == "empty") {
@@ -214,7 +234,7 @@ class PokedexViewHolder(private val pokedexlist: ArrayList<Pokedex>) :
         }
 
         holder.pokedex = pokedex
-        holder.setIsRecyclable(false)
+        holder.i = i
 
     }
 

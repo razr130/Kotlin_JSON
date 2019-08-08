@@ -17,6 +17,7 @@ import com.android.volley.*
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.example.kotlin_json.CustomRequest.VolleyMultipartRequest
+import com.example.kotlin_json.Model.Pokedex
 import com.example.kotlin_json.ViewHolder.PokedexViewHolder
 import com.jaredrummler.materialspinner.MaterialSpinner
 import kotlinx.android.synthetic.main.activity_add_pokemon.*
@@ -42,10 +43,13 @@ class AddPokemonActivity : AppCompatActivity() {
 
 
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_pokemon)
 
+        val poke = intent.getSerializableExtra("object") as Pokedex
+        val index = intent.getIntExtra("index",0)
         spinner.setItems(
             "", "Normal", "Grass", "Fire", "Water", "Fighting",
             "Flying", "Poison", "Ground", "Rock", "Bug",
@@ -93,6 +97,8 @@ class AddPokemonActivity : AppCompatActivity() {
                 (TxtPokemonSpDefenseAdd.text.toString()).toInt(),
                 (TxtPokemonSpeedAdd.text.toString()).toInt()
             )
+            MainActivity.i = index
+            MainActivity.poke = poke
 
         }
 

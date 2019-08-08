@@ -38,6 +38,10 @@ import java.util.ArrayList
 
 class MainActivity : AppCompatActivity() {
 
+    companion object{
+        var i: Int = -1
+        lateinit var poke: Pokedex
+    }
 
     var pokedexlist = ArrayList<Pokedex>()
     lateinit var recyclerView: RecyclerView
@@ -118,8 +122,15 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        pokedexlist.clear()
-        parseJSON()
+        if(i==-1){
+            pokedexlist.clear()
+            parseJSON()
+        }
+        else{
+            poke.isanswer = true
+            madapter.update(poke, i)
+        }
+
     }
 
 
