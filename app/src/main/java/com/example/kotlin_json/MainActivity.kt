@@ -127,6 +127,9 @@ class MainActivity : AppCompatActivity() {
         val loading = ProgressDialog(this)
         loading.setMessage("Loading pokedex...")
         loading.show()
+        loading.setCanceledOnTouchOutside(false)
+        loading.setCancelable(false)
+
         val queue = Volley.newRequestQueue(this)
 
 

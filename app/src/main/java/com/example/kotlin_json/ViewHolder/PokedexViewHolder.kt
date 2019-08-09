@@ -42,70 +42,31 @@ class PokedexViewHolder(private val pokedexlist: ArrayList<Pokedex>) :
     RecyclerView.Adapter<PokedexViewHolder.PokedexHolder>() {
 
 
-    class PokedexHolder(itemView: View, var pokedex: Pokedex? = null) : RecyclerView.ViewHolder(itemView) {
+    class PokedexHolder(itemView: View, var pokedex: Pokedex? = null, var i: Int? = null) : RecyclerView.ViewHolder(itemView) {
         var txtpokemonname = itemView.findViewById(R.id.TxtPokemonName) as TextView
         var txtpokedexno = itemView.findViewById(R.id.TxtPokedexNo) as TextView
         var type1 = itemView.findViewById(R.id.IconType1) as Button
         var type2 = itemView.findViewById(R.id.IconType2) as Button
         var pokemonimg = itemView.findViewById(R.id.PictPokemon) as ImageView
+        var card = itemView.findViewById(R.id.pokedex_card) as CardView
+        var menu = itemView.findViewById(R.id.pokedex_menu) as ImageView
 
         init {
-            itemView.pokedex_menu.setOnClickListener {
-                val popupmenu = PopupMenu(itemView.context, it)
-                popupmenu.setOnMenuItemClickListener { item ->
-                    when (item.itemId) {
-                        R.id.menu_edit -> {
-                            val intent = Intent(itemView.context, EditPokemonActivity::class.java)
-                            intent.putExtra("name", pokedex?.name)
-                            intent.putExtra("id", pokedex?.id)
-                            intent.putExtra("type", pokedex?.type)
-                            itemView.context.startActivity(intent)
-                            true
-                        }
-                        R.id.menu_delete -> {
-                            val queue = Volley.newRequestQueue(itemView.context)
-                            val url = Constant.BASE_URL + pokedex?.id
-                            val arrayRequest = StringRequest(
-                                Request.Method.DELETE, url, Response.Listener<String>
-                                {
-                                    Toast.makeText(itemView.context, "Pokemon data deleted", Toast.LENGTH_LONG).show()
-                                },
-                                Response.ErrorListener
-                                { error ->
-                                    Toast.makeText(itemView.context, error.toString(), Toast.LENGTH_LONG).show()
-                                })
-                            queue.add(arrayRequest)
-                            true
-                        }
-                        else -> false
-                    }
-                }
-                popupmenu.inflate(R.menu.menu_pokedex)
-                popupmenu.show()
-            }
             itemView.setOnClickListener {
                 //========real main section===========
                 val intent = Intent(itemView.context, DetailPokemonActivity::class.java)
                 intent.putExtra("id", pokedex?.id)
                 itemView.context.startActivity(intent)
-
-                //=======testing dialog section
-
-//                val mdialogview = LayoutInflater.from(itemView.context).inflate(R.layout.answer_dialog, null)
-//                val muilder = AlertDialog.Builder(itemView.context).setView(mdialogview).setTitle("Answer Form")
-//                val malertdialog = muilder.show()
-//
-//                mdialogview.BtnSubmitAnswer.setOnClickListener {
-//                    malertdialog.dismiss()
-//                    MainActivity.answerlist.add(Answer(pokedex?.id, mdialogview.TxtTestAnswer.text.toString()))
-//                }
-
             }
         }
 
+
+
     }
 
-
+    fun deletenotify(i: Int?) {
+        notifyItemRemoved(i!!)
+    }
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): PokedexHolder {
         val v = LayoutInflater.from(p0.context).inflate(R.layout.pokedex_layout, p0, false)
         return PokedexHolder(v)
@@ -119,7 +80,7 @@ class PokedexViewHolder(private val pokedexlist: ArrayList<Pokedex>) :
         val imgurl =  Constant.BASE_URL + "Content/Images/"
         val pokedex: Pokedex = pokedexlist[i]
         val type: Array<String> = pokedex.type.split(" ").toTypedArray()
-        holder.txtpokedexno.text = pokedex.id
+        holder.txtpokedexno.text = "#" + pokedex.id
         holder.txtpokemonname.text = pokedex.name
         if (type[1].isEmpty() || type[1] == "") {
             holder.type2.visibility = View.GONE
@@ -164,44 +125,61 @@ class PokedexViewHolder(private val pokedexlist: ArrayList<Pokedex>) :
             }
 
         }
-
         holder.type1.text = type[0]
         if (holder.type1.text == "Normal") {
             holder.type1.setBackgroundResource(R.drawable.icon_normal)
+            holder.card.setCardBackgroundColor(holder.itemView.context.resources.getColor(R.color.normal_lighter))
         } else if (holder.type1.text == "Bug") {
             holder.type1.setBackgroundResource(R.drawable.icon_bug)
+            holder.card.setCardBackgroundColor(holder.itemView.context.resources.getColor(R.color.bug_lighter))
         } else if (holder.type1.text == "Dark") {
             holder.type1.setBackgroundResource(R.drawable.icon_dark)
+            holder.card.setCardBackgroundColor(holder.itemView.context.resources.getColor(R.color.dark_lighter))
         } else if (holder.type1.text == "Dragon") {
             holder.type1.setBackgroundResource(R.drawable.icon_dragon)
+            holder.card.setCardBackgroundColor(holder.itemView.context.resources.getColor(R.color.dragon_lighter))
         } else if (holder.type1.text == "Electric") {
             holder.type1.setBackgroundResource(R.drawable.icon_electric)
+            holder.card.setCardBackgroundColor(holder.itemView.context.resources.getColor(R.color.electric_lighter))
         } else if (holder.type1.text == "Fairy") {
             holder.type1.setBackgroundResource(R.drawable.icon_fairy)
+            holder.card.setCardBackgroundColor(holder.itemView.context.resources.getColor(R.color.fairy_lighter))
         } else if (holder.type1.text == "Fighting") {
             holder.type1.setBackgroundResource(R.drawable.icon_fighting)
+            holder.card.setCardBackgroundColor(holder.itemView.context.resources.getColor(R.color.fighting_lighter))
         } else if (holder.type1.text == "Fire") {
             holder.type1.setBackgroundResource(R.drawable.icon_fire)
+            holder.card.setCardBackgroundColor(holder.itemView.context.resources.getColor(R.color.fire_lighter))
         } else if (holder.type1.text == "Flying") {
             holder.type1.setBackgroundResource(R.drawable.icon_flying)
+            holder.card.setCardBackgroundColor(holder.itemView.context.resources.getColor(R.color.flying_lighter))
         } else if (holder.type1.text == "Ghost") {
             holder.type1.setBackgroundResource(R.drawable.icon_ghost)
+            holder.card.setCardBackgroundColor(holder.itemView.context.resources.getColor(R.color.ghost_lighter))
         } else if (holder.type1.text == "Grass") {
             holder.type1.setBackgroundResource(R.drawable.icon_grass)
+            holder.card.setCardBackgroundColor(holder.itemView.context.resources.getColor(R.color.grass_lighter))
         } else if (holder.type1.text == "Ground") {
             holder.type1.setBackgroundResource(R.drawable.icon_ground)
+            holder.card.setCardBackgroundColor(holder.itemView.context.resources.getColor(R.color.ground_lighter))
         } else if (holder.type1.text == "Ice") {
             holder.type1.setBackgroundResource(R.drawable.icon_ice)
+            holder.card.setCardBackgroundColor(holder.itemView.context.resources.getColor(R.color.ice_lighter))
         } else if (holder.type1.text == "Poison") {
             holder.type1.setBackgroundResource(R.drawable.icon_poison)
+            holder.card.setCardBackgroundColor(holder.itemView.context.resources.getColor(R.color.poison_lighter))
         } else if (holder.type1.text == "Psychic") {
             holder.type1.setBackgroundResource(R.drawable.icon_psychic)
+            holder.card.setCardBackgroundColor(holder.itemView.context.resources.getColor(R.color.psychic_lighter))
         } else if (holder.type1.text == "Rock") {
             holder.type1.setBackgroundResource(R.drawable.icon_rock)
+            holder.card.setCardBackgroundColor(holder.itemView.context.resources.getColor(R.color.rock_lighter))
         } else if (holder.type1.text == "Steel") {
             holder.type1.setBackgroundResource(R.drawable.icon_steel)
+            holder.card.setCardBackgroundColor(holder.itemView.context.resources.getColor(R.color.steel_lighter))
         } else if (holder.type1.text == "Water") {
             holder.type1.setBackgroundResource(R.drawable.icon_water)
+            holder.card.setCardBackgroundColor(holder.itemView.context.resources.getColor(R.color.water_lighter))
         }
 
         if (pokedex.image == "empty") {
@@ -213,7 +191,45 @@ class PokedexViewHolder(private val pokedexlist: ArrayList<Pokedex>) :
             Picasso.with(context).load(imgurl + pokedex.image).fit().centerInside().into(holder.pokemonimg)
         }
 
+        holder.menu.setOnClickListener {
+            val popupmenu = PopupMenu(holder.itemView.context, it)
+            popupmenu.setOnMenuItemClickListener { item ->
+                when (item.itemId) {
+                    R.id.menu_edit -> {
+//                        val intent = Intent(holder.itemView.context, EditPokemonActivity::class.java)
+//                        intent.putExtra("name", pokedex?.name)
+//                        intent.putExtra("id", pokedex?.id)
+//                        intent.putExtra("type", pokedex?.type)
+//                        holder.itemView.context.startActivity(intent)
+                        true
+                    }
+                    R.id.menu_delete -> {
+                        val queue = Volley.newRequestQueue(holder.itemView.context)
+                        val url = Constant.BASE_URL + "PostPokedex/delete_dex?id=" + pokedex!!.id
+                        val deleteRequest = StringRequest(
+                            Request.Method.DELETE, url, Response.Listener<String>
+                            {
+                                Toast.makeText(holder.itemView.context, "Pokemon data deleted", Toast.LENGTH_LONG).show()
+                            },
+                            Response.ErrorListener
+                            { error ->
+                                Toast.makeText(holder.itemView.context, error.toString(), Toast.LENGTH_LONG).show()
+                            })
+                        queue.add(deleteRequest)
+                        pokedexlist.removeAt(i)
+                        notifyDataSetChanged()
+                        true
+
+                    }
+                    else -> false
+                }
+            }
+            popupmenu.inflate(R.menu.menu_pokedex)
+            popupmenu.show()
+        }
+
         holder.pokedex = pokedex
+        holder.i = i
         holder.setIsRecyclable(false)
 
     }

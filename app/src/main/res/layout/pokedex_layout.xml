@@ -3,103 +3,107 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="80dp"
         android:layout_marginTop="20dp"
         android:layout_marginStart="15dp"
         android:layout_marginEnd="15dp"
         app:cardElevation="8dp"
         app:cardCornerRadius="20dp"
-        android:id="@+id/pokedex_card">
+        android:id="@+id/pokedex_card"
+        app:cardBackgroundColor="@color/grass_lighter">
 
-    <RelativeLayout
+    <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-        <TextView
-                android:id="@+id/TxtPokemonName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Pokemon Name"
-                android:textAlignment="center"
-                android:textSize="20dp"
-                android:textStyle="bold"
-                android:textColor="#000000"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-        />
-        <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/threedots"
-                android:id="@+id/pokedex_menu"
-                android:padding="10dp"
-                android:layout_alignParentRight="true"/>
-        <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:layout_below="@+id/TxtPokemonName"
-                android:id="@+id/PictPokemon"
-                android:scaleType="centerInside"
-                android:padding="10dp"
-                android:src="@drawable/pokeball"
-                android:adjustViewBounds="true"
-
-        />
-        <TextView
-                android:id="@+id/TxtPokedexNo"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="pokedex number"
-                android:textAlignment="center"
-                android:textSize="15sp"
-                android:textColor="#757575"
-                android:layout_below="@id/PictPokemon"
-        />
-
-        <!--<TextView-->
-        <!--android:id="@+id/TxtType"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:text="Type"-->
-        <!--android:textAlignment="center"-->
-        <!--android:textSize="15dp"-->
-        <!--android:textColor="#000000"-->
-        <!--android:layout_below="@id/TxtPokedexNo"-->
-        <!--android:layout_marginTop="10dp"-->
-        <!--android:layout_marginBottom="20dp"-->
-        <!--/>-->
-        <LinearLayout android:layout_width="match_parent"
-                      android:layout_height="wrap_content"
-                      android:layout_below="@id/TxtPokedexNo"
-                      android:gravity="center"
-                      android:layout_marginTop="15dp"
-                      android:layout_marginBottom="15dp"
-                      android:layout_centerHorizontal="true">
-            <Button
-                    android:id="@+id/IconType1"
-                    android:layout_width="80dp"
-                    android:layout_height="20dp"
-                    android:background="@drawable/icon_normal"
-                    android:text="Normal"
-                    android:textColor="@color/md_white_1000"
-                    android:layout_margin="5dp"
-                    android:textSize="10sp"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+        <RelativeLayout android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center">
+            <View android:layout_width="80dp" android:layout_height="80dp"
+                  android:background="@drawable/rounded_shape"
+                  android:id="@+id/view_1"
+                  android:layout_marginStart="-10dp">
+            </View>
+            <View android:layout_width="50dp"
+                  android:layout_height="100dp"
+                  android:layout_marginStart="35dp"
+                  android:background="@drawable/half_circle">
+            </View>
+            <ImageView
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:id="@+id/PictPokemon"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/pokeball"
+                    android:adjustViewBounds="true"
             />
-            <Button
-                    android:id="@+id/IconType2"
-                    android:layout_width="80dp"
-                    android:layout_height="20dp"
-                    android:background="@drawable/icon_normal"
-                    android:text="Normal"
-                    android:textColor="@color/md_white_1000"
-                    android:layout_margin="5dp"
-                    android:textSize="10sp"
+        </RelativeLayout>
 
+        <RelativeLayout android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="15dp">
+            <LinearLayout android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:orientation="horizontal"
+                          android:id="@+id/LinearIdandName"
+                          android:layout_marginTop="5dp">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                          android:id="@+id/TxtPokedexNo"
+                          android:text="@string/pokedex_no"
+                          android:textSize="15sp"
+                          android:layout_marginTop="5dp"
+                          android:textColor="@color/md_white_1000"
+                />
+                <TextView
+                        android:id="@+id/TxtPokemonName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/pokemon_name"
+                        android:textSize="15sp"
+                        android:textColor="@color/md_white_1000"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginStart="20dp"
+                />
+            </LinearLayout>
+            <LinearLayout android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:layout_below="@id/LinearIdandName"
+                          android:layout_marginTop="10dp">
+                <Button
+                        android:id="@+id/IconType1"
+                        android:layout_width="70dp"
+                        android:layout_height="20dp"
+                        android:background="@drawable/icon_normal"
+                        android:text="@string/normal"
+                        android:textColor="@color/md_white_1000"
+                        android:textSize="8sp"
+                />
+                <Button
+                        android:id="@+id/IconType2"
+                        android:layout_width="70dp"
+                        android:layout_height="20dp"
+                        android:background="@drawable/icon_normal"
+                        android:text="@string/normal"
+                        android:textColor="@color/md_white_1000"
+                        android:layout_marginStart="8dp"
+                        android:textSize="8sp"
+                />
+
+            </LinearLayout>
+        </RelativeLayout>
+        <RelativeLayout android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="right">
+            <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/threedots"
+                    android:id="@+id/pokedex_menu"
+                    android:padding="10dp"
+                    android:layout_marginTop="10dp"
             />
-
-        </LinearLayout>
-
-
-    </RelativeLayout>
-
-
+        </RelativeLayout>
+    </LinearLayout>
 </android.support.v7.widget.CardView>

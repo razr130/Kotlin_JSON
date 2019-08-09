@@ -11,6 +11,8 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.text.Editable
+import android.text.TextUtils
+import android.view.WindowManager
 import android.widget.TextView
 import android.widget.Toast
 import com.android.volley.*
@@ -46,28 +48,34 @@ class AddPokemonActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_pokemon)
 
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
+
+
         spinner.setItems(
             "", "Normal", "Grass", "Fire", "Water", "Fighting",
             "Flying", "Poison", "Ground", "Rock", "Bug",
             "Ghost", "Electric", "Psychic", "Ice", "Dragon",
             "Dark", "Steel", "Fairy"
         )
-        spinner.setOnItemSelectedListener(MaterialSpinner.OnItemSelectedListener<String> { _, _, _, item ->
-            //Snackbar.make(view, "Clicked " + item, Snackbar.LENGTH_LONG).show();
-            type.add(item)
-            Toast.makeText(this, type.get(0), Toast.LENGTH_LONG).show()
-        })
+        spinner.setOnItemSelectedListener { _, _, _, item ->
+            type.add(item.toString())
+            Toast.makeText(this, type[0],Toast.LENGTH_SHORT).show()
+        }
         spinner2.setItems(
             "", "Normal", "Grass", "Fire", "Water", "Fighting",
             "Flying", "Poison", "Ground", "Rock", "Bug",
             "Ghost", "Electric", "Psychic", "Ice", "Dragon",
             "Dark", "Steel", "Fairy"
         )
-        spinner2.setOnItemSelectedListener(MaterialSpinner.OnItemSelectedListener<String> { _, _, _, item ->
-            //Snackbar.make(view, "Clicked " + item, Snackbar.LENGTH_LONG).show();
-            type.add(item)
-            Toast.makeText(this, type.get(1), Toast.LENGTH_LONG).show()
-        })
+        spinner2.setOnItemSelectedListener { _, _, _, item ->
+            if(type.size == 0){
+                Toast.makeText(this, "Pick the main type first",Toast.LENGTH_SHORT).show()
+            }
+            else{
+                type.add(item.toString())
+                Toast.makeText(this, type[1],Toast.LENGTH_SHORT).show()
+            }
+        }
 
         PicPokemonAdd.setOnClickListener {
             val intent = Intent()
@@ -78,6 +86,68 @@ class AddPokemonActivity : AppCompatActivity() {
         }
 
         BtnAdd.setOnClickListener {
+
+            if(TextUtils.isEmpty(TxtPokedexNoAdd.text)){
+                TxtPokedexNoAdd.error = "Pokedex ID is empty"
+                TxtPokedexNoAdd.requestFocus()
+                return@setOnClickListener
+            }
+            if(TextUtils.isEmpty(TxtPokemonNameAdd.text)){
+                TxtPokemonNameAdd.error = "Pokedex Name is empty"
+                TxtPokemonNameAdd.requestFocus()
+                return@setOnClickListener
+            }
+            if(TextUtils.isEmpty(TxtPokemonSpeciesAdd.text)){
+                TxtPokemonSpeciesAdd.error = "Species is empty"
+                TxtPokemonSpeciesAdd.requestFocus()
+                return@setOnClickListener
+            }
+            if(TextUtils.isEmpty(TxtPokemonHeightAdd.text)){
+                TxtPokemonHeightAdd.error = "Height is empty"
+                TxtPokemonHeightAdd.requestFocus()
+                return@setOnClickListener
+            }
+            if(TextUtils.isEmpty(TxtPokemonWeightAdd.text)){
+                TxtPokemonWeightAdd.error = "Weight is empty"
+                TxtPokemonWeightAdd.requestFocus()
+                return@setOnClickListener
+            }
+            if(TextUtils.isEmpty(TxtPokemonAbilitiesAdd.text)){
+                TxtPokemonAbilitiesAdd.error = "Abilities is empty"
+                TxtPokemonAbilitiesAdd.requestFocus()
+                return@setOnClickListener
+            }
+            if(TextUtils.isEmpty(TxtPokemonHPAdd.text)){
+                TxtPokemonHPAdd.error = "HP is empty"
+                TxtPokemonHPAdd.requestFocus()
+                return@setOnClickListener
+            }
+            if(TextUtils.isEmpty(TxtPokemonAttackAdd.text)){
+                TxtPokemonAttackAdd.error = "Attack is empty"
+                TxtPokemonAttackAdd.requestFocus()
+                return@setOnClickListener
+            }
+            if(TextUtils.isEmpty(TxtPokemonDefenseAdd.text)){
+                TxtPokemonDefenseAdd.error = "Defense is empty"
+                TxtPokemonDefenseAdd.requestFocus()
+                return@setOnClickListener
+            }
+            if(TextUtils.isEmpty(TxtPokemonSpAttackAdd.text)){
+                TxtPokemonSpAttackAdd.error = "Sp. Attack is empty"
+                TxtPokemonSpAttackAdd.requestFocus()
+                return@setOnClickListener
+            }
+            if(TextUtils.isEmpty(TxtPokemonSpDefenseAdd.text)){
+                TxtPokemonSpDefenseAdd.error = "Sp. Defense is empty"
+                TxtPokemonSpDefenseAdd.requestFocus()
+                return@setOnClickListener
+            }
+            if(TextUtils.isEmpty(TxtPokemonSpeedAdd.text)){
+                TxtPokemonSpeedAdd.error = "Speed is empty"
+                TxtPokemonSpeedAdd.requestFocus()
+                return@setOnClickListener
+            }
+
             upload(
                 TxtPokedexNoAdd.text.toString(),
                 TxtPokemonNameAdd.text.toString(),
@@ -98,17 +168,11 @@ class AddPokemonActivity : AppCompatActivity() {
 
     }
 
-    var selectorphotoUri: Uri? = null
+
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-//        if (requestCode == 0 && resultCode == Activity.RESULT_OK && data != null) {
-//            selectorphotoUri = data.data
-//            bitmap = MediaStore.Images.Media.getBitmap(contentResolver, selectorphotoUri)
-//            PicPokemonAdd.setImageBitmap(bitmap)
-//
-//        }
         val clipdata = data?.clipData
 
         val contentURI = data?.data

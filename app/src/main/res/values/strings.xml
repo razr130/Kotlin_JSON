@@ -10,4 +10,16 @@
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
     <string name="base_url">http://192.168.2.27:9090/</string>
+    <string name="pokedex_no">#000</string>
+    <string name="pokemon_name">PokemonName</string>
+    <string name="normal">Normal</string>
+    <string name="add_pokemon">Add Pokemon!</string>
+    <string name="new_pokedex_number">#000 </string>
+    <string name="new_pokedex_name">Pokemon Name ... </string>
+    <string name="new_pokedex_abilities">Abilites ...  </string>
+    <string name="new_pokedex_species">Species ... </string>
+    <string name="just">Just an Arrow </string>
+    <string name="click">Tap on pokeball image to choose pokemon image</string>
+    <string name="type1">Main Type</string>
+    <string name="type2">Secondary Type</string>
 </resources>

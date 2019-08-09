@@ -1,5 +1,6 @@
 package com.example.kotlin_json
 
+import android.app.ProgressDialog
 import android.content.Context
 import android.graphics.Color
 import android.support.v7.app.AppCompatActivity
@@ -10,6 +11,7 @@ import android.widget.Toast
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonArrayRequest
+import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.example.kotlin_json.Model.Pokedex
 import com.example.kotlin_json.ViewHolder.PokedexViewHolder
@@ -48,14 +50,19 @@ class DetailPokemonActivity : AppCompatActivity() {
 
 
     private fun parseJSON(id: String) {
+        val loading = ProgressDialog(this)
+        loading.setMessage("Loading pokedex...")
+        loading.show()
+        loading.setCanceledOnTouchOutside(false)
+        loading.setCancelable(false)
         val queue = Volley.newRequestQueue(this)
         val imgurl = getString(R.string.base_url) + "Content/Images/"
 
-        val arrayRequest = JsonArrayRequest(
-            Request.Method.GET, url + "pokedex/get_pokedex?id=" + id, null, Response.Listener<JSONArray>
+        val arrayRequest = JsonObjectRequest(
+            Request.Method.GET, url + "pokedex/get_pokedex?id=" + id, null, Response.Listener<JSONObject>
             { response ->
-                for (k in 0 until response.length()) {
-                    val ob: JSONObject = response.getJSONObject(k)
+
+                    val ob: JSONObject = response
 
                     val dexno: String = ob.getString("pokedex_id")
                     val name: String = ob.getString("pokemon_name")
@@ -196,7 +203,7 @@ class DetailPokemonActivity : AppCompatActivity() {
 //                    setupstatchart(hp,attack,defense,spattack,spdefense,speed)
                     setStatGraph(hp,attack,defense,spattack,spdefense,speed)
 
-                }
+                    loading.dismiss()
             },
             Response.ErrorListener
             { error ->
