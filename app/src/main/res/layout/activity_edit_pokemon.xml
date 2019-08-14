@@ -18,21 +18,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-            <RelativeLayout
+            <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-                <TextView
-                        android:id="@+id/TxtClose"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Back"
-                        android:textColor="#ffffff"
-                        android:textSize="20dp"
-                        android:textStyle="bold"
-                        android:layout_alignParentStart="true"
-                        android:layout_alignParentLeft="true"
-                />
-            </RelativeLayout>
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+                <ImageView android:layout_width="wrap_content"
+                           android:layout_height="wrap_content"
+                           android:src="@drawable/ic_arrow_back_black_24dp"
+                           android:contentDescription="@string/just"/>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                          android:text="@string/edit_pokemon"
+                          android:textColor="@color/md_white_1000"
+                          android:textSize="15sp"
+                          android:layout_marginStart="15dp"/>
+            </LinearLayout>
 
         </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
@@ -67,7 +66,7 @@
                     android:layout_margin="20dp"
                     android:inputType="number"
                     android:layout_marginTop="10dp"
-            android:enabled="false"/>
+                    android:enabled="false"/>
             <EditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -75,7 +74,7 @@
                     android:layout_below="@+id/TxtPokedexNoEdit"
                     android:hint="New Name ... "
                     android:layout_margin="20dp"
-                    android:layout_marginTop="10dp" />
+                    android:layout_marginTop="10dp"/>
             <Spinner
                     android:id="@+id/spinner3"
                     android:layout_width="match_parent"

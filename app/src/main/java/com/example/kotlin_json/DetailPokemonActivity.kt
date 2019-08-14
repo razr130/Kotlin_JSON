@@ -56,7 +56,7 @@ class DetailPokemonActivity : AppCompatActivity() {
         loading.setCanceledOnTouchOutside(false)
         loading.setCancelable(false)
         val queue = Volley.newRequestQueue(this)
-        val imgurl = getString(R.string.base_url) + "Content/Images/"
+        val imgurl = url + "Content/Images/"
 
         val arrayRequest = JsonObjectRequest(
             Request.Method.GET, url + "pokedex/get_pokedex?id=" + id, null, Response.Listener<JSONObject>

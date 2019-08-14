@@ -14,6 +14,7 @@
     <string name="pokemon_name">PokemonName</string>
     <string name="normal">Normal</string>
     <string name="add_pokemon">Add Pokemon!</string>
+    <string name="edit_pokemon">Edit Pokemon!</string>
     <string name="new_pokedex_number">#000 </string>
     <string name="new_pokedex_name">Pokemon Name ... </string>
     <string name="new_pokedex_abilities">Abilites ...  </string>

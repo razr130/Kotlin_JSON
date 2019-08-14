@@ -53,10 +53,10 @@ class PokedexViewHolder(private val pokedexlist: ArrayList<Pokedex>) :
 
         init {
             itemView.setOnClickListener {
-                //========real main section===========
                 val intent = Intent(itemView.context, DetailPokemonActivity::class.java)
                 intent.putExtra("id", pokedex?.id)
                 itemView.context.startActivity(intent)
+               // Toast.makeText(itemView.context, i.toString() + " " + adapterPosition.toString(), Toast.LENGTH_LONG).show()
             }
         }
 
@@ -64,9 +64,6 @@ class PokedexViewHolder(private val pokedexlist: ArrayList<Pokedex>) :
 
     }
 
-    fun deletenotify(i: Int?) {
-        notifyItemRemoved(i!!)
-    }
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): PokedexHolder {
         val v = LayoutInflater.from(p0.context).inflate(R.layout.pokedex_layout, p0, false)
         return PokedexHolder(v)
@@ -196,28 +193,27 @@ class PokedexViewHolder(private val pokedexlist: ArrayList<Pokedex>) :
             popupmenu.setOnMenuItemClickListener { item ->
                 when (item.itemId) {
                     R.id.menu_edit -> {
-//                        val intent = Intent(holder.itemView.context, EditPokemonActivity::class.java)
-//                        intent.putExtra("name", pokedex?.name)
-//                        intent.putExtra("id", pokedex?.id)
-//                        intent.putExtra("type", pokedex?.type)
-//                        holder.itemView.context.startActivity(intent)
+                        val intent = Intent(holder.itemView.context, EditPokemonActivity::class.java)
+                        intent.putExtra("id", pokedex.id)
+                        holder.itemView.context.startActivity(intent)
                         true
                     }
                     R.id.menu_delete -> {
-                        val queue = Volley.newRequestQueue(holder.itemView.context)
-                        val url = Constant.BASE_URL + "PostPokedex/delete_dex?id=" + pokedex!!.id
-                        val deleteRequest = StringRequest(
-                            Request.Method.DELETE, url, Response.Listener<String>
-                            {
-                                Toast.makeText(holder.itemView.context, "Pokemon data deleted", Toast.LENGTH_LONG).show()
-                            },
-                            Response.ErrorListener
-                            { error ->
-                                Toast.makeText(holder.itemView.context, error.toString(), Toast.LENGTH_LONG).show()
-                            })
-                        queue.add(deleteRequest)
-                        pokedexlist.removeAt(i)
-                        notifyDataSetChanged()
+                        val builder = AlertDialog.Builder(holder.itemView.context)
+                        builder.setTitle("Delete pokedex data")
+                        builder.setMessage("Are you sure you want to delete " + pokedex.name + " data?")
+
+
+                        builder.setPositiveButton(android.R.string.yes) { dialog, which ->
+                            deletedata(i, holder, pokedex.id)
+                        }
+
+                        builder.setNegativeButton(android.R.string.no) { dialog, which ->
+                           dialog.dismiss()
+                        }
+
+                        builder.show()
+
                         true
 
                     }
@@ -230,8 +226,25 @@ class PokedexViewHolder(private val pokedexlist: ArrayList<Pokedex>) :
 
         holder.pokedex = pokedex
         holder.i = i
-        holder.setIsRecyclable(false)
 
+    }
+
+    private fun deletedata(i: Int,holder: PokedexHolder, id: String) {
+        val queue = Volley.newRequestQueue(holder.itemView.context)
+        val url = Constant.BASE_URL + "PostPokedex/delete_dex?id=" + id
+        val deleteRequest = StringRequest(
+            Request.Method.DELETE, url, Response.Listener<String>
+            {
+                Toast.makeText(holder.itemView.context, "Pokemon data deleted", Toast.LENGTH_LONG).show()
+            },
+            Response.ErrorListener
+            { error ->
+                Toast.makeText(holder.itemView.context, error.toString(), Toast.LENGTH_LONG).show()
+            })
+        queue.add(deleteRequest)
+        pokedexlist.removeAt(i)
+        notifyItemRemoved(i)
+        notifyItemRangeChanged(i,itemCount)
     }
 
 }
