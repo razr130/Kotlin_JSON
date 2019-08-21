@@ -14,6 +14,7 @@ import com.android.volley.toolbox.JsonArrayRequest
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.example.kotlin_json.Model.Pokedex
+import com.example.kotlin_json.Singleton.VolleySingleton
 import com.example.kotlin_json.ViewHolder.PokedexViewHolder
 import com.github.mikephil.charting.charts.HorizontalBarChart
 import com.github.mikephil.charting.components.Description
@@ -209,7 +210,7 @@ class DetailPokemonActivity : AppCompatActivity() {
             { error ->
                 Toast.makeText(this, error.toString(), Toast.LENGTH_LONG).show()
             })
-        queue.add(arrayRequest)
+        VolleySingleton.getInstance(this).addToRequestQueue(arrayRequest)
     }
 
     private fun setStatGraph(hp: Int, attack: Int, defense: Int, spattack: Int, spdefense: Int, speed: Int) {

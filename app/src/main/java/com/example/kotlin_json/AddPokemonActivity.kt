@@ -25,6 +25,7 @@ import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.example.kotlin_json.CustomRequest.VolleyMultipartRequest
 import com.example.kotlin_json.Model.Pokedex
+import com.example.kotlin_json.Singleton.VolleySingleton
 import com.example.kotlin_json.ViewHolder.PokedexViewHolder
 import com.jaredrummler.materialspinner.MaterialSpinner
 import kotlinx.android.synthetic.main.activity_add_pokemon.*
@@ -319,10 +320,10 @@ class AddPokemonActivity : AppCompatActivity() {
         val dialog = builder.create()
         dialog.show()
 
-        val volleyMultipartRequest = object : VolleyMultipartRequest(Request.Method.POST, url + "PostPokedex/post_dex",
+        val volleyMultipartRequest = object : VolleyMultipartRequest(Method.POST, url + "PostPokedex/post_dex",
             Response.Listener { response ->
 
-                rQueue!!.cache.clear()
+
                 try {
                     val jsonObject = JSONObject(String(response.data))
 
@@ -372,8 +373,8 @@ class AddPokemonActivity : AppCompatActivity() {
             DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
             DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
         )
-        rQueue = Volley.newRequestQueue(this@AddPokemonActivity)
-        rQueue!!.add(volleyMultipartRequest)
+
+        VolleySingleton.getInstance(this).addToRequestQueue(volleyMultipartRequest)
         dialog.dismiss()
     }
 

@@ -21,6 +21,7 @@ import com.android.volley.toolbox.JsonArrayRequest
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.example.kotlin_json.CustomRequest.VolleyMultipartRequest
+import com.example.kotlin_json.Singleton.VolleySingleton
 import com.jaredrummler.materialspinner.MaterialSpinner
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_add_pokemon.*
@@ -182,8 +183,6 @@ class EditPokemonActivity : AppCompatActivity() {
         loading.show()
         loading.setCanceledOnTouchOutside(false)
         loading.setCancelable(false)
-        val queue = Volley.newRequestQueue(this)
-
 
         val arrayRequest = JsonObjectRequest(
             Request.Method.GET, url + "pokedex/get_pokedex?id=" + id, null, Response.Listener<JSONObject>
@@ -236,11 +235,11 @@ class EditPokemonActivity : AppCompatActivity() {
             { error ->
                 Toast.makeText(this, error.toString(), Toast.LENGTH_LONG).show()
             })
-        queue.add(arrayRequest)
+        VolleySingleton.getInstance(this).addToRequestQueue(arrayRequest)
     }
 
     private fun loadtype() {
-        val queue = Volley.newRequestQueue(this)
+
         val arrayRequest =
             JsonArrayRequest(Request.Method.GET, url + "type/get_type", null, Response.Listener<JSONArray>
             { response ->
@@ -262,7 +261,7 @@ class EditPokemonActivity : AppCompatActivity() {
             DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
             DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
         )
-        queue.add(arrayRequest)
+        VolleySingleton.getInstance(this).addToRequestQueue(arrayRequest)
     }
 
 
@@ -410,7 +409,7 @@ class EditPokemonActivity : AppCompatActivity() {
         val volleyMultipartRequest = object : VolleyMultipartRequest(Method.PUT, url + "PostPokedex/edit_dex?id=" + oldid,
             Response.Listener { response ->
 
-                rQueue!!.cache.clear()
+
                 try {
                     val jsonObject = JSONObject(String(response.data))
                     if (jsonObject.getString("success") == "1") {
@@ -456,8 +455,8 @@ class EditPokemonActivity : AppCompatActivity() {
             DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
             DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
         )
-        rQueue = Volley.newRequestQueue(this@EditPokemonActivity)
-        rQueue!!.add(volleyMultipartRequest)
+
+        VolleySingleton.getInstance(this).addToRequestQueue(volleyMultipartRequest)
         dialog.dismiss()
     }
 

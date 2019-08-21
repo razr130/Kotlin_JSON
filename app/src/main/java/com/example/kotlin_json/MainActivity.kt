@@ -21,6 +21,7 @@ import com.android.volley.toolbox.RequestFuture
 import com.android.volley.toolbox.Volley
 import com.example.kotlin_json.Model.Answer
 import com.example.kotlin_json.Model.Pokedex
+import com.example.kotlin_json.Singleton.VolleySingleton
 import com.example.kotlin_json.ViewHolder.PokedexViewHolder
 import com.mikepenz.materialdrawer.AccountHeader
 import com.mikepenz.materialdrawer.AccountHeaderBuilder
@@ -50,6 +51,34 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        builddrawer()
+
+        recyclerView = Recycler_pokemon
+        recyclerView.setHasFixedSize(true)
+        recyclerView.layoutManager = LinearLayoutManager(this)
+
+
+        fab.setOnClickListener {
+            var intent = Intent(this@MainActivity, AddPokemonActivity::class.java)
+            startActivity(intent)
+        }
+
+        TxtSearch.setOnKeyListener(View.OnKeyListener { v, keyCode, event ->
+            if (keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_UP) {
+                if (TxtSearch.text.isEmpty()) {
+                    pokedexlist.clear()
+                    parseJSON()
+                } else {
+                    pokedexlist.clear()
+                    SearchJSON(TxtSearch.text.toString())
+                }
+                return@OnKeyListener true
+            }
+            false
+        })
+    }
+
+    private fun builddrawer() {
         val headerResult = AccountHeaderBuilder()
             .withActivity(this)
             .withHeaderBackground(R.drawable.header)
@@ -87,33 +116,6 @@ class MainActivity : AppCompatActivity() {
                 false
             }
             .build()
-
-        recyclerView = Recycler_pokemon
-        recyclerView.setHasFixedSize(true)
-        recyclerView.layoutManager = LinearLayoutManager(this)
-
-
-
-
-
-        fab.setOnClickListener {
-            var intent = Intent(this@MainActivity, AddPokemonActivity::class.java)
-            startActivity(intent)
-        }
-
-        TxtSearch.setOnKeyListener(View.OnKeyListener { v, keyCode, event ->
-            if (keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_UP) {
-                if (TxtSearch.text.isEmpty()) {
-                    pokedexlist.clear()
-                    parseJSON()
-                } else {
-                    pokedexlist.clear()
-                    SearchJSON(TxtSearch.text.toString())
-                }
-                return@OnKeyListener true
-            }
-            false
-        })
     }
 
     override fun onResume() {
@@ -130,7 +132,7 @@ class MainActivity : AppCompatActivity() {
         loading.setCanceledOnTouchOutside(false)
         loading.setCancelable(false)
 
-        val queue = Volley.newRequestQueue(this)
+        val queue = VolleySingleton.getInstance(this.applicationContext).requestQueue
 
 
         val arrayRequest = JsonArrayRequest(Request.Method.GET, url + "pokedex/get_pokedex", null, Response.Listener<JSONArray>
@@ -160,10 +162,9 @@ class MainActivity : AppCompatActivity() {
             DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
             DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
         )
-        queue.add(arrayRequest)
+        VolleySingleton.getInstance(this).addToRequestQueue(arrayRequest)
         queue.addRequestFinishedListener(RequestQueue.RequestFinishedListener<String> {
             madapter = PokedexViewHolder(pokedexlist)
-            //madapter.notifyDataSetChanged()
             recyclerView.adapter = madapter
             loading.dismiss()
         })
