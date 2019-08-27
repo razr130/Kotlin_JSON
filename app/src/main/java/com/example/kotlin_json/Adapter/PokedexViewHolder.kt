@@ -1,42 +1,21 @@
-package com.example.kotlin_json.ViewHolder
+package com.example.kotlin_json.Adapter
 
-import android.app.Activity
 import android.app.AlertDialog
-import android.app.PendingIntent.getActivity
 import android.content.Context
 import android.content.Intent
-import android.content.Intent.getIntent
-import android.content.Intent.getIntentOld
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.support.v4.app.ActivityCompat.startActivityForResult
-import android.support.v4.content.ContextCompat.startActivity
-import android.support.v7.view.menu.MenuView
 import android.support.v7.widget.CardView
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
-import android.view.MenuInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import com.android.volley.Request
 import com.android.volley.Response
-import com.android.volley.toolbox.JsonArrayRequest
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.example.kotlin_json.*
-import com.example.kotlin_json.Model.Answer
 import com.example.kotlin_json.Model.Pokedex
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.activity_upload_file_practice.*
-import kotlinx.android.synthetic.main.answer_dialog.*
-import kotlinx.android.synthetic.main.answer_dialog.view.*
-import kotlinx.android.synthetic.main.answer_dialog.view.TxtTestAnswer
-import kotlinx.android.synthetic.main.pokedex_layout.view.*
-import org.json.JSONArray
-import org.json.JSONObject
-import java.io.IOException
-import java.security.AccessController.getContext
 
 class PokedexViewHolder(private val pokedexlist: ArrayList<Pokedex>) :
     RecyclerView.Adapter<PokedexViewHolder.PokedexHolder>() {

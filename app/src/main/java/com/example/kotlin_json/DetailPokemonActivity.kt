@@ -5,34 +5,24 @@ import android.content.Context
 import android.graphics.Color
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.support.v4.content.ContextCompat
 import android.view.View
 import android.widget.Toast
 import com.android.volley.Request
 import com.android.volley.Response
-import com.android.volley.toolbox.JsonArrayRequest
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
-import com.example.kotlin_json.Model.Pokedex
 import com.example.kotlin_json.Singleton.VolleySingleton
-import com.example.kotlin_json.ViewHolder.PokedexViewHolder
 import com.github.mikephil.charting.charts.HorizontalBarChart
 import com.github.mikephil.charting.components.Description
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
-import com.github.mikephil.charting.formatter.IValueFormatter
-import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
-import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_detail_pokemon.*
-import org.json.JSONArray
 import org.json.JSONObject
 import com.github.mikephil.charting.components.AxisBase
-import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.formatter.IAxisValueFormatter
-import com.github.mikephil.charting.utils.ViewPortHandler
 
 
 class DetailPokemonActivity : AppCompatActivity() {

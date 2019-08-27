@@ -15,11 +15,11 @@
     <string name="normal">Normal</string>
     <string name="add_pokemon">Add Pokemon!</string>
     <string name="edit_pokemon">Edit Pokemon!</string>
-    <string name="new_pokedex_number">#000 </string>
-    <string name="new_pokedex_name">Pokemon Name </string>
-    <string name="new_pokedex_abilities">Abilites  </string>
-    <string name="new_pokedex_species">Species </string>
-    <string name="just">Just an Arrow </string>
+    <string name="new_pokedex_number">#000</string>
+    <string name="new_pokedex_name">Pokemon Name</string>
+    <string name="new_pokedex_abilities">Abilites</string>
+    <string name="new_pokedex_species">Species</string>
+    <string name="just">Just an Arrow</string>
     <string name="click">Tap on pokeball image to choose pokemon image</string>
     <string name="type1">Main Type</string>
     <string name="type2">Secondary Type</string>
@@ -27,4 +27,11 @@
     <string name="height">Height</string>
     <string name="weight">Weight</string>
     <string name="stat">STATS</string>
+    <string name="movename">Move Name</string>
+    <string name="power">Power : </string>
+    <string name="dmg">100</string>
+    <string name="moveeffect">move effect ets bla bla bla bla</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
