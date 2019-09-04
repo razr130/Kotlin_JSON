@@ -2,10 +2,12 @@ package com.example.kotlin_json.Fragments
 
 
 import android.app.ProgressDialog
+import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -43,7 +45,10 @@ class MoveListFragment : Fragment() {
     ): View? {
 
         return inflater.inflate(R.layout.fragment_move_list, container, false)
+
     }
+
+
     override fun onResume() {
         super.onResume()
         movelist.clear()
@@ -82,9 +87,7 @@ class MoveListFragment : Fragment() {
                     val dmg: Int = ob.getInt("move_damage")
                     val effect: String = ob.getString("move_effect")
 
-
                     movelist.add(Move(moveid, name, type, category,dmg,effect))
-
                 }
             },
             Response.ErrorListener
